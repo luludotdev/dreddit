@@ -1,5 +1,6 @@
 // Package Dependencies
 const log = require('fancylog')
+const schedule = require('node-schedule')
 const { WebhookClient } = require('discord.js')
 
 // Local Dependencies
@@ -32,7 +33,6 @@ const main = async () => {
       }
     }
   } catch (err) {
-    console.error(err)
     log.error('No new Posts')
   }
 }
@@ -58,4 +58,4 @@ const getPost = async () => {
   }
 }
 
-main()
+schedule.scheduleJob('*/10 * * * *', () => { main() })
