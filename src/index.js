@@ -1,4 +1,5 @@
 // Package Dependencies
+const log = require('fancylog')
 const { WebhookClient } = require('discord.js')
 
 // Local Dependencies
@@ -6,10 +7,16 @@ const { fetchPosts } = require('./reddit')
 const { addRow, accessFile } = require('./cache')
 
 // Environment Variables
-const { SUBREDDIT } = process.env
+const { SUBREDDIT, ALLOW_NSFW } = process.env
 
 const main = async () => {
-  console.log(await getPost())
+  try {
+    let post = await getPost()
+    console.log(post)
+  } catch (err) {
+    console.error(err)
+    log.error('No new Posts')
+  }
 }
 
 const getPost = async () => {
@@ -19,10 +26,11 @@ const getPost = async () => {
   let dupes = await accessFile()
   let IDs = dupes.map(x => x.id)
   while (true) { // eslint-disable-line
-    if (posts.length) throw new Error('No new posts')
+    if (posts.length === 0) throw new Error('No new posts')
     let id = Math.floor(Math.random() * posts.length)
     let post = posts[id]
-    if (IDs.includes(post.id)) {
+
+    if (IDs.includes(post.id) || (post.nsfw && !(ALLOW_NSFW !== undefined))) {
       posts.splice(id, 1)
       continue
     } else {
