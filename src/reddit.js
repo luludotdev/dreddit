@@ -3,9 +3,22 @@ const snekfetch = require('snekfetch')
 const url = require('url')
 const path = require('path')
 
-// Environment Variables
-const { SUBREDDIT } = process.env
+/**
+ * NSFW Object - Common for all function returns
+ * @typedef {Object} NSFWObject
+ * @property {string} file_url
+ * @property {string} id
+ * @property {string} source
+ * @property {boolean} nsfw
+ * @property {string} type
+ */
 
+/**
+ * Fetch Hot Posts
+ * @param {string} subreddit Subreddit to Scrape
+ * @param {string} [level] Type of posts to scrape. Default = `hot`
+ * @returns {Promise.<NSFWObject[]>}
+ */
 const fetchPosts = async (subreddit, level = 'hot') => {
   let res = await snekfetch.get(`https://www.reddit.com/r/${subreddit}/${level}.json?limit=100`)
   let arr = res.body.data.children.map(o => o.data)
@@ -35,3 +48,5 @@ const fetchPosts = async (subreddit, level = 'hot') => {
 
   return [...images, ...GFYs]
 }
+
+module.exports = { fetchPosts }
