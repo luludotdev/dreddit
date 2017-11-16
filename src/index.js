@@ -7,12 +7,30 @@ const { fetchPosts } = require('./reddit')
 const { addRow, accessFile } = require('./cache')
 
 // Environment Variables
-const { SUBREDDIT, ALLOW_NSFW } = process.env
+const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW } = process.env
+
+// Setup Webhook Clients
+const clients = HOOK_URLS.split('|')
+  .map(x => {
+    const [id, token] = x.split('/').slice(-2)
+    let client = new WebhookClient(id, token)
+    return client
+  })
 
 const main = async () => {
   try {
     let post = await getPost()
-    console.log(post)
+    for (let client of clients) {
+      try {
+        if (post.type === 'image') {
+          client.send('', { files: [post.file_url] })
+        } else if (post.type === 'gfy') {
+          client.send(post.file_url)
+        }
+      } catch (err) {
+        log.error(`Error posting to webhook:\n${err.message}`)
+      }
+    }
   } catch (err) {
     console.error(err)
     log.error('No new Posts')
