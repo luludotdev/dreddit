@@ -38,6 +38,11 @@ const fetchPosts = async (subreddit, level = 'hot') => {
       x.type = 'image'
       return x
     })
+    .map(x => {
+      let { protocol, host, pathname } = url.parse(x.file_url)
+      x.file_url = `${protocol}//${host}${pathname}`
+      return x
+    })
 
   let GFYs = arr
     .filter(x => x.file_url.match(/http(s)?:\/\/gfycat.com\/(.+)/i))
