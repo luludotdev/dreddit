@@ -34,7 +34,7 @@ const saveFile = async rows => {
  */
 const addRow = async id => {
   let json = await accessFile()
-  let timestamp = new Date().getDate().toString()
+  let timestamp = new Date().getTime().toString()
   json.push({ id, timestamp })
   return saveFile(json)
 }
