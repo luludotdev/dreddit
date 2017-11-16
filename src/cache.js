@@ -29,12 +29,13 @@ const saveFile = async rows => {
 }
 
 /**
- * @param {Cache} row Cache Object
+ * @param {string} id Cache Object
  * @returns {Promise.<void>}
  */
-const addRow = async row => {
+const addRow = async id => {
   let json = await accessFile()
-  json.push(row)
+  let timestamp = new Date().getDate().toString()
+  json.push({ id, timestamp })
   return saveFile(json)
 }
 
