@@ -24,5 +24,8 @@
   "homepage": "https://gitlab.com/lolPants/discord-memebot#README",
   "devDependencies": {
     "eslint": "^4.11.0"
+  },
+  "dependencies": {
+    "snekfetch": "^3.5.8"
   }
 }
