@@ -1,0 +1,25 @@
+{
+  "name": "discord-memebot",
+  "version": "0.1.0",
+  "description": "me_irl style bot but for Discord",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "eslint --color src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/lolPants/discord-memebot.git"
+  },
+  "keywords": [
+    "me_irl",
+    "reddit",
+    "discord",
+    "bot"
+  ],
+  "author": "Jack Baron <me@jackbaron.com> (https://www.jackbaron.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/lolPants/discord-memebot/issues"
+  },
+  "homepage": "https://gitlab.com/lolPants/discord-memebot#README"
+}
