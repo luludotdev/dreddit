@@ -45,7 +45,7 @@ const ensureFile = async () => {
   try {
     return await fs.readJSON(FILE_PATH)
   } catch (err) {
-    return fs.writeJSON(FILE_PATH, {})
+    return fs.writeJSON(FILE_PATH, [])
   }
 }
 
