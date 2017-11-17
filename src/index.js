@@ -39,7 +39,9 @@ const main = async () => {
 
 const getPost = async () => {
   // Fetch Reddit Posts
-  let posts = await fetchPosts(SUBREDDIT)
+  let subreddits = SUBREDDIT.split('|')
+  let subreddit = subreddits[Math.floor(Math.random() * subreddits.length)]
+  let posts = await fetchPosts(subreddit)
 
   let dupes = await accessFile()
   let IDs = dupes.map(x => x.id)

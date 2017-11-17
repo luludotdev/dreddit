@@ -19,6 +19,7 @@ Built by [Jack Baron](https://www.jackbaron.com)
 To configure your bot, make a new file named `memebot.env` and fill it out as follows:
 ```env
 # Subreddit to monitor
+# You can monitor multiple by separating them with |
 SUBREDDIT=me_irl
 
 # Remove this if you don't want to see NSFW posts
