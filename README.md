@@ -13,7 +13,9 @@ Built by [Jack Baron](https://www.jackbaron.com)
 3. Create a Discord Webhook and note down the URL.
 4. Create `memebot.env` and fill in your details *(see below)*.
 5. Start the bot using:  
-`docker run --restart on-failure --name memebot -d --env-file memebot.env registry.gitlab.com/lolpants/discord-memebot:master`
+`docker run --restart on-failure --name memebot -d --env-file memebot.env registry.gitlab.com/lolpants/discord-memebot:master`  
+You can also get persistent cache by doing  
+`docker run --restart on-failure --name memebot -d --env-file memebot.env --volume /path/to/folder:/usr/src/app/src/cache registry.gitlab.com/lolpants/discord-memebot:master`
 
 ## `memebot.env`
 To configure your bot, make a new file named `memebot.env` and fill it out as follows:
