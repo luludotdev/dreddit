@@ -15,5 +15,8 @@ RUN apk add --no-cache bash git openssh make gcc g++ python && \
 # Bundle app source
 COPY . .
 
+# Mount cache volume
+VOLUME ["/usr/src/app/src/cache"]
+
 # Start Node.js
 CMD [ "node", "." ]
