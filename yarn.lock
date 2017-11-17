@@ -219,7 +219,8 @@ discord.js@hydrabolt/discord.js:
   resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/09315ae9dbcef978721a10dde4d00971fba0561c"
   dependencies:
     long "^3.0.0"
-    prism-media "^0.0.1"
+    pako "^1.0.0"
+    prism-media "^0.0.2"
     snekfetch "^3.0.0"
     tweetnacl "^1.0.0"
     ws "^3.0.0"
