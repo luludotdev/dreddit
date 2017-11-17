@@ -44,6 +44,15 @@ const fetchPosts = async (subreddit, level = 'hot') => {
       return x
     })
 
+  let imgurRegex = /https?:\/\/imgur\.com\/([a-zA-Z0-9]{5,})/i
+  let imgurs = arr
+    .filter(x => x.file_url.match(imgurRegex))
+    .map(x => {
+      let match = x.file_url.match(imgurRegex)
+      x.file_url = `https://i.imgur.com/${match[1]}.png`
+      return x
+    })
+
   let GFYs = arr
     .filter(x => x.file_url.match(/http(s)?:\/\/gfycat.com\/(.+)/i))
     .map(x => {
@@ -51,7 +60,7 @@ const fetchPosts = async (subreddit, level = 'hot') => {
       return x
     })
 
-  return [...images, ...GFYs]
+  return [...images, ...imgurs, ...GFYs]
 }
 
 module.exports = { fetchPosts }
