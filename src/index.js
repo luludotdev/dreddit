@@ -58,4 +58,4 @@ const getPost = async () => {
   }
 }
 
-schedule.scheduleJob('*/10 * * * *', () => { main() })
+schedule.scheduleJob('*/5 * * * *', () => { main() })
