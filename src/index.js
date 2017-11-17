@@ -8,7 +8,7 @@ const { fetchPosts } = require('./reddit')
 const { addRow, accessFile } = require('./cache')
 
 // Environment Variables
-const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW } = process.env
+const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW, INTERVAL } = process.env
 
 // Setup Webhook Clients
 const clients = HOOK_URLS.split('|')
@@ -58,4 +58,5 @@ const getPost = async () => {
   }
 }
 
-schedule.scheduleJob('*/5 * * * *', () => { main() })
+let interval = INTERVAL || 5
+schedule.scheduleJob(`*/${interval} * * * *`, () => { main() })
