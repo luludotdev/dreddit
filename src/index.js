@@ -21,6 +21,7 @@ const clients = HOOK_URLS.split('|')
 const main = async () => {
   try {
     let post = await getPost()
+    log.i(`Posting ${post.id} from /r/${post.subreddit}`)
     for (let client of clients) {
       try {
         if (post.type === 'image') {
@@ -62,3 +63,5 @@ const getPost = async () => {
 
 let interval = INTERVAL || 5
 schedule.scheduleJob(`*/${interval} * * * *`, () => { main() })
+log.i(`Bot Started...`)
+log.i(`Posting every ${interval === 1 ? 'minute' : `${interval} minutes`}.`)
