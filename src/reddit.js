@@ -50,6 +50,7 @@ const fetchPosts = async (subreddit, level = 'hot') => {
     .map(x => {
       let match = x.file_url.match(imgurRegex)
       x.file_url = `https://i.imgur.com/${match[1]}.png`
+      x.type = 'image'
       return x
     })
 
