@@ -10,6 +10,17 @@ const { addRow, accessFile } = require('./cache')
 // Environment Variables
 const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW, INTERVAL } = process.env
 
+/**
+ * NSFW Object - Common for all function returns
+ * @typedef {Object} NSFWObject
+ * @property {string} subreddit
+ * @property {string} file_url
+ * @property {string} id
+ * @property {string} source
+ * @property {boolean} nsfw
+ * @property {string} type
+ */
+
 // Setup Webhook Clients
 const clients = HOOK_URLS.split('|')
   .map(x => {
@@ -41,11 +52,15 @@ const main = async () => {
 const getPost = async () => {
   // Fetch Reddit Posts
   let subreddits = SUBREDDIT.split('|')
-  let subreddit = subreddits[Math.floor(Math.random() * subreddits.length)]
-  let posts = await fetchPosts(subreddit)
+  let posts = await Promise.all(subreddits.map(x => fetchPosts(x)))
 
-  let dupes = await accessFile()
-  let IDs = dupes.map(x => x.id)
+  /**
+   * @type {NSFWObject[]}
+   */
+  posts = [].concat(...posts)
+
+  let IDs = await accessFile()
+  IDs = IDs.map(x => x.id)
   while (true) { // eslint-disable-line
     if (posts.length === 0) throw new Error('No new posts')
     let id = Math.floor(Math.random() * posts.length)
