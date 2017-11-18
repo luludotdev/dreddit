@@ -6,6 +6,7 @@ const path = require('path')
 /**
  * NSFW Object - Common for all function returns
  * @typedef {Object} NSFWObject
+ * @property {string} subreddit
  * @property {string} file_url
  * @property {string} id
  * @property {string} source
