@@ -23,6 +23,7 @@ const fetchPosts = async (subreddit, level = 'hot') => {
   let res = await snekfetch.get(`https://www.reddit.com/r/${subreddit}/${level}.json?limit=100`)
   let arr = res.body.data.children.map(o => o.data)
     .map(o => ({
+      subreddit,
       file_url: o.url,
       id: o.id,
       source: `https://reddit.com${o.permalink}`,
