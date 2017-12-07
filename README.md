@@ -24,6 +24,10 @@ To configure your bot, make a new file named `memebot.env` and fill it out as fo
 # You can monitor multiple by separating them with |
 SUBREDDIT=me_irl
 
+# Remove these as needed
+POST_TITLES=true
+POST_URLS=true
+
 # Remove this if you don't want to see NSFW posts
 ALLOW_NSFW=true
 

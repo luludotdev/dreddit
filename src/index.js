@@ -8,12 +8,13 @@ const { fetchPosts } = require('./reddit')
 const { addRow, accessFile } = require('./cache')
 
 // Environment Variables
-const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW, INTERVAL } = process.env
+const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW, POST_TITLES, POST_URLS, INTERVAL } = process.env
 
 /**
  * NSFW Object - Common for all function returns
  * @typedef {Object} NSFWObject
  * @property {string} subreddit
+ * @property {string} title
  * @property {string} file_url
  * @property {string} id
  * @property {string} source
@@ -35,11 +36,13 @@ const main = async () => {
     log.i(`Posting ${post.id} from /r/${post.subreddit}`)
     for (let client of clients) {
       try {
-        if (post.type === 'image') {
-          client.send('', { files: [post.file_url] })
-        } else if (post.type === 'gfy') {
-          client.send(post.file_url)
-        }
+        let meta = []
+        if (POST_TITLES !== undefined) meta = [...meta, post.title]
+        if (POST_URLS !== undefined) meta = [...meta, `<${post.source}>`]
+        meta = meta.join('\n')
+
+        if (post.type === 'image') client.send(meta, { files: [post.file_url] })
+        else if (post.type === 'gfy') client.send(`${meta}\n${post.file_url}`)
       } catch (err) {
         log.error(`Error posting to webhook:\n${err.message}`)
       }
@@ -49,6 +52,9 @@ const main = async () => {
   }
 }
 
+/**
+ * @returns {NSFWObject}
+ */
 const getPost = async () => {
   // Fetch Reddit Posts
   let subreddits = SUBREDDIT.split('|')
