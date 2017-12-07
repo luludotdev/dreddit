@@ -7,6 +7,7 @@ const path = require('path')
  * NSFW Object - Common for all function returns
  * @typedef {Object} NSFWObject
  * @property {string} subreddit
+ * @property {string} title
  * @property {string} file_url
  * @property {string} id
  * @property {string} source
@@ -25,6 +26,7 @@ const fetchPosts = async (subreddit, level = 'hot') => {
   let arr = res.body.data.children.map(o => o.data)
     .map(o => ({
       subreddit,
+      title: o.title,
       file_url: o.url,
       id: o.id,
       source: `https://reddit.com${o.permalink}`,
