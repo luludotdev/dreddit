@@ -1,4 +1,9 @@
+
 node_modules
 npm-debug.log
 src/cache
 cache.json
+.npmignore
+.git
+.gitignore
+LICENSE
