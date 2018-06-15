@@ -11,8 +11,8 @@ const { addRow, accessFile } = require('./cache')
 const { HOOK_URLS, SUBREDDIT, ALLOW_NSFW, POST_TITLES, POST_URLS, INTERVAL } = process.env
 
 /**
- * NSFW Object - Common for all function returns
- * @typedef {Object} NSFWObject
+ * Reddit Post
+ * @typedef {Object} Post
  * @property {string} subreddit
  * @property {string} title
  * @property {string} file_url
@@ -53,7 +53,7 @@ const main = async () => {
 }
 
 /**
- * @returns {NSFWObject}
+ * @returns {Post}
  */
 const getPost = async () => {
   // Fetch Reddit Posts
@@ -61,7 +61,7 @@ const getPost = async () => {
   let posts = await Promise.all(subreddits.map(x => fetchPosts(x)))
 
   /**
-   * @type {NSFWObject[]}
+   * @type {Post[]}
    */
   posts = [].concat(...posts)
 

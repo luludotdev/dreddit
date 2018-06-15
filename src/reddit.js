@@ -4,8 +4,8 @@ const url = require('url')
 const path = require('path')
 
 /**
- * NSFW Object - Common for all function returns
- * @typedef {Object} NSFWObject
+ * Reddit Post
+ * @typedef {Object} Post
  * @property {string} subreddit
  * @property {string} title
  * @property {string} file_url
@@ -19,7 +19,7 @@ const path = require('path')
  * Fetch Hot Posts
  * @param {string} subreddit Subreddit to Scrape
  * @param {string} [level] Type of posts to scrape. Default = `hot`
- * @returns {Promise.<NSFWObject[]>}
+ * @returns {Promise.<Post[]>}
  */
 const fetchPosts = async (subreddit, level = 'hot') => {
   let res = await snekfetch.get(`https://www.reddit.com/r/${subreddit}/${level}.json?limit=100`)
