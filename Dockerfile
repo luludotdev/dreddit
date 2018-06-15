@@ -5,11 +5,12 @@ FROM node:carbon-alpine
 WORKDIR /usr/app
 
 # Copy package info
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
 # Install app dependencies
 RUN apk add --no-cache tini bash git openssh make gcc g++ python && \
-  yarn install && \
+  npm i -g npm && \
+  npm ci && \
   apk del bash git openssh make gcc g++ python
 
 # Bundle app source
