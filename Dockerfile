@@ -8,10 +8,10 @@ WORKDIR /usr/app
 COPY package.json package-lock.json ./
 
 # Install app dependencies
-RUN apk add --no-cache tini bash git openssh make gcc g++ python && \
+RUN apk add --no-cache tini bash git openssh && \
   npm i -g npm && \
   npm ci && \
-  apk del bash git openssh make gcc g++ python
+  apk del bash git openssh
 
 # Bundle app source
 COPY . .
