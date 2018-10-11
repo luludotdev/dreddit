@@ -37,7 +37,7 @@ const main = async () => {
     for (let client of clients) {
       try {
         let meta = []
-        if (POST_TITLES !== undefined) meta = [...meta, post.title]
+        if (POST_TITLES !== undefined) meta = [...meta, post.title.replace(/@/g, '\u200b')]
         if (POST_URLS !== undefined) meta = [...meta, `<${post.source}>`]
         meta = meta.join('\n')
 
