@@ -1,5 +1,5 @@
 # Alpine Node Image
-FROM node:carbon-alpine
+FROM node:10-alpine
 
 # Create app directory
 WORKDIR /usr/app
@@ -9,7 +9,6 @@ COPY package.json package-lock.json ./
 
 # Install app dependencies
 RUN apk add --no-cache tini bash git openssh && \
-  npm i -g npm && \
   npm ci && \
   apk del bash git openssh
 
@@ -21,4 +20,4 @@ VOLUME ["/usr/app/src/cache"]
 
 # Start Node.js
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD [ "node", "." ]
+CMD ["node", "."]
