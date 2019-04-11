@@ -1,9 +1,12 @@
 import { WebhookClient } from 'discord.js'
 import { config, IPostConfig } from './config'
+import { getPosts, SortLevel } from './reddit'
 import { resolveArray } from './util'
 
 export default class PostManager {
   private subreddit: string
+  private level: SortLevel | undefined
+
   private webhooks: WebhookClient[]
   private interval: number
 
@@ -13,6 +16,7 @@ export default class PostManager {
 
   constructor(post: IPostConfig) {
     this.subreddit = post.subreddit
+    this.level = post.level
     this.interval = post.interval || config.interval
 
     this.allowNSFW = post.allowNSFW || false

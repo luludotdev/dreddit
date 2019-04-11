@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { existsSync, loadConfig, readSync } from './fs'
+import { SortLevel } from './reddit'
 import { panic } from './util'
 
 const configDir = join(__dirname, '..', 'config')
@@ -16,6 +17,8 @@ interface IConfig {
 
 export interface IPostConfig {
   subreddit: string
+  level?: SortLevel
+
   webhooks: string | string[]
   interval?: number
 

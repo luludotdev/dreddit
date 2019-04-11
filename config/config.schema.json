@@ -9,6 +9,16 @@
         "interval": {
           "type": "number"
         },
+        "level": {
+          "enum": [
+            "controversial",
+            "hot",
+            "new",
+            "rising",
+            "top"
+          ],
+          "type": "string"
+        },
         "subreddit": {
           "type": "string"
         },

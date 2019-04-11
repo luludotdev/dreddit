@@ -39,7 +39,7 @@ const IMGUR_RX = /https?:\/\/imgur\.com\/([a-zA-Z0-9]{5,})/i
 const GFY_RX = /http(s)?:\/\/gfycat.com\/(.+)/i
 const IMAGE_EXTS = ['.png', '.gif', '.jpg', '.jpeg']
 
-type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
+export type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
 export const getPosts: (
   subreddit: string,
   level?: SortLevel
