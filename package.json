@@ -2,7 +2,7 @@
   "name": "dreddit",
   "version": "0.2.0",
   "main": "build/index.js",
-  "repository": "git@gitlab.com:lolPants/discord-memebot.git",
+  "repository": "git@github.com:lolPants/dreddit.git",
   "author": "Jack Baron <jackmbaron@gmail.com>",
   "license": "ISC",
   "private": true,
