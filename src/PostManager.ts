@@ -1,10 +1,13 @@
 import { WebhookClient } from 'discord.js'
+import signale from 'signale'
 import { config, IPostConfig } from './config'
-import { getPosts, IPost, SortLevel } from './reddit'
+import { getPosts, IPost, SortLevel, validateSubreddit } from './reddit'
 import { redis } from './redis'
 import { filterAsync, resolveArray } from './util'
 
 export default class PostManager {
+  private ready: boolean = false
+
   private subreddit: string
   private level: SortLevel | undefined
 
@@ -32,6 +35,23 @@ export default class PostManager {
     })
 
     this.postManager = this.getPost()
+    this.init()
+  }
+
+  private async init() {
+    const valid = await validateSubreddit(this.subreddit)
+    if (!valid) {
+      signale.warn(`/r/${this.subreddit} could not be reached!`)
+      return undefined
+    }
+
+    signale.info(
+      `Posting from /r/${this.subreddit}/${this.level} every ${this.interval}s`
+    )
+
+    this.ready = true
+    this.postLoop()
+    setInterval(() => this.postLoop(), 1000 * this.interval)
   }
 
   private postHook(message: string, file?: string | string[]) {
@@ -59,6 +79,11 @@ export default class PostManager {
     }
 
     while (true) {
+      if (!this.ready) {
+        yield null
+        continue
+      }
+
       posts = await loadPosts()
       if (posts.length === 0) {
         yield null
@@ -69,5 +94,9 @@ export default class PostManager {
       yield next
       posts = posts.filter(p => p.id !== next.id)
     }
+  }
+
+  private async postLoop() {
+    // TODO
   }
 }

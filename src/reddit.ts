@@ -35,6 +35,18 @@ export interface IResponse {
   }
 }
 
+export const validateSubreddit = async (subreddit: string) => {
+  try {
+    const resp = await axios.get<IResponse>(
+      `https://www.reddit.com/r/${subreddit}.json?limit=1`
+    )
+
+    return resp.status === 200
+  } catch (err) {
+    return false
+  }
+}
+
 const IMGUR_RX = /https?:\/\/imgur\.com\/([a-zA-Z0-9]{5,})/i
 const GFY_RX = /http(s)?:\/\/gfycat.com\/(.+)/i
 const IMAGE_EXTS = ['.png', '.gif', '.jpg', '.jpeg']
