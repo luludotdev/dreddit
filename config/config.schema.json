@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "IPostConfig": {
+      "properties": {
+        "allowNSFW": {
+          "type": "boolean"
+        },
+        "interval": {
+          "type": "number"
+        },
+        "level": {
+          "enum": [
+            "controversial",
+            "hot",
+            "new",
+            "rising",
+            "top"
+          ],
+          "type": "string"
+        },
+        "subreddit": {
+          "type": "string"
+        },
+        "titles": {
+          "type": "boolean"
+        },
+        "urls": {
+          "type": "boolean"
+        },
+        "webhooks": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "type": "object",
+      "required": [
+        "subreddit",
+        "webhooks"
+      ]
+    }
+  },
+  "properties": {
+    "interval": {
+      "type": "number"
+    },
+    "subreddits": {
+      "items": {
+        "$ref": "#/definitions/IPostConfig"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "title": "root",
+  "required": [
+    "interval",
+    "subreddits"
+  ]
+}

@@ -1,9 +1,12 @@
-
 node_modules
 npm-debug.log
-src/cache
-cache.json
-.npmignore
+
 .git
 .gitignore
 LICENSE
+Dockerfile
+
+build
+*.env
+
+config/config.json
