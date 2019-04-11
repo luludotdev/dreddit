@@ -40,3 +40,6 @@ build/
 
 # Config
 config.json
+
+# Docker Redis DB
+db/

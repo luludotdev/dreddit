@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+
+.git
+.gitignore
+LICENSE
+Dockerfile
+
+build
+*.env
+
+config/config.json
