@@ -96,7 +96,7 @@ export default class PostManager {
         continue
       }
 
-      const [next] = posts
+      const next = posts[Math.floor(Math.random() * posts.length)]
       yield next
       posts = posts.filter(p => p.id !== next.id)
     }
