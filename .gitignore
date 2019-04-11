@@ -35,5 +35,5 @@ node_modules
 # VSCode
 .vscode
 
-# Bot Cache
-src/cache
+# Built Files
+build/
