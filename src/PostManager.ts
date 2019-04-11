@@ -17,7 +17,7 @@ export default class PostManager {
   constructor(post: IPostConfig) {
     this.subreddit = post.subreddit
     this.level = post.level
-    this.interval = post.interval || config.interval
+    this.interval = Math.max(30, post.interval || config.interval)
 
     this.allowNSFW = post.allowNSFW || false
     this.postTitles = post.titles || false
