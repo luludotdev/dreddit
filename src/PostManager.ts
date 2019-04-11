@@ -19,7 +19,7 @@ export default class PostManager {
 
   constructor(post: IPostConfig) {
     this.subreddit = post.subreddit
-    this.level = post.level
+    this.level = post.level || 'hot'
     this.interval = Math.max(30, post.interval || config.interval)
 
     this.allowNSFW = post.allowNSFW || false
