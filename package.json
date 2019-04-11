@@ -6,6 +6,16 @@
   "author": "Jack Baron <jackmbaron@gmail.com>",
   "license": "ISC",
   "private": true,
+  "scripts": {
+    "test": "npm run check && npm run lint",
+    "check": "npm run build -- --noEmit",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "prebuild": "rimraf build",
+    "build": "tsc",
+    "build:dev": "npm run build -- --sourceMap",
+    "watch": "tsc --watch",
+    "dev": "npm run watch -- --sourceMap"
+  },
   "devDependencies": {
     "@types/node": "^11.13.4",
     "prettier": "^1.16.4",
