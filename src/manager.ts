@@ -47,6 +47,11 @@ export default class PostManager {
     return `/r/${this.subreddit}`
   }
 
+  public async cleanup() {
+    if (!this.ready) return undefined
+    signale.complete(`Stopping posts from ${this.redditURL}`)
+  }
+
   private async init() {
     const valid = await validateSubreddit(this.subreddit)
     if (!valid) {
