@@ -7,6 +7,7 @@ import { filterAsync, resolveArray } from './util'
 
 export default class PostManager {
   private ready: boolean = false
+  private noNew: boolean = false
 
   private subreddit: string
   private level: SortLevel | undefined
@@ -103,6 +104,33 @@ export default class PostManager {
   }
 
   private async postLoop() {
-    // TODO
+    const { value: post } = await this.postManager.next()
+    if (post === null) {
+      if (!this.noNew) {
+        signale.note(`No new posts on ${this.redditURL}`)
+        this.noNew = true
+      }
+
+      return undefined
+    } else {
+      this.noNew = false
+    }
+
+    try {
+      const meta: string[] = []
+
+      if (this.postTitles) meta.push(post.title)
+      if (this.postURLs) meta.push(`<${post.source}>`)
+      if (post.type === 'gfy') meta.push(post.url)
+
+      const message = meta.join('\n')
+      if (post.type === 'gfy') await this.postHook(message)
+      else await this.postHook(message, post.url)
+
+      await redis.hset(this.subreddit, post.id, 1)
+      signale.info(`Posted ${post.id} from ${this.redditURL}`)
+    } catch (err) {
+      signale.error(`Failed to post ${post.id} from ${this.redditURL}`)
+    }
   }
 }
