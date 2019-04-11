@@ -38,16 +38,22 @@ export default class PostManager {
     this.init()
   }
 
+  private get redditURL() {
+    return `/r/${this.subreddit}/${this.level}`
+  }
+
+  private get redditURLShort() {
+    return `/r/${this.subreddit}`
+  }
+
   private async init() {
     const valid = await validateSubreddit(this.subreddit)
     if (!valid) {
-      signale.warn(`/r/${this.subreddit} could not be reached!`)
+      signale.warn(`${this.redditURLShort} could not be reached!`)
       return undefined
     }
 
-    signale.info(
-      `Posting from /r/${this.subreddit}/${this.level} every ${this.interval}s`
-    )
+    signale.info(`Posting from ${this.redditURL} every ${this.interval}s`)
 
     this.ready = true
     this.postLoop()
