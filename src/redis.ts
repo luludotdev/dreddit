@@ -15,5 +15,5 @@ redis.on('error', (err: Error) => {
 })
 
 redis.on('ready', () => {
-  signale.success('Connected to Redis!')
+  signale.start('Connected to Redis!')
 })
