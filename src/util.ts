@@ -23,3 +23,17 @@ export const escapePings: (
 
   return escape(built)
 }
+
+export const mapAsync: <T, U>(
+  array: T[],
+  callbackfn: (value: T, index: number, array: T[]) => Promise<U>
+) => Promise<U[]> = async (array, callbackfn) =>
+  Promise.all(array.map(callbackfn))
+
+export const filterAsync: <T>(
+  array: T[],
+  callbackfn: (value: T, index: number, array: T[]) => Promise<boolean>
+) => Promise<T[]> = async (array, callbackfn) => {
+  const filterMap = await mapAsync(array, callbackfn)
+  return array.filter((value, index) => filterMap[index])
+}
