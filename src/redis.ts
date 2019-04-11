@@ -1,6 +1,7 @@
 import Redis from 'ioredis'
 import signale from 'signale'
 import { REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from './env'
+import { panic } from './util'
 
 export const redis = new Redis({
   db: REDIS_DB,
@@ -10,8 +11,7 @@ export const redis = new Redis({
 })
 
 redis.on('error', (err: Error) => {
-  signale.error('Failed to connect to Redis Instance!')
-  process.exit(1)
+  panic('Failed to connect to Redis Instance!')
 })
 
 redis.on('ready', () => {
