@@ -69,9 +69,9 @@ export default class PostManager {
     let posts: Array<Readonly<IPost>> = []
 
     const loadPosts = async () => {
-      const localPosts = (await getPosts(this.subreddit, this.level))
-        .filter(p => (this.allowNSFW ? true : !p.nsfw))
-        .slice(0, 10)
+      const localPosts = (await getPosts(this.subreddit, this.level)).filter(
+        p => (this.allowNSFW ? true : !p.nsfw)
+      )
 
       const filtered = await filterAsync(localPosts, async p => {
         const exists = await redis.hexists(this.subreddit, p.id)
