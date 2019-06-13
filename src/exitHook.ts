@@ -1,4 +1,4 @@
-import signale from 'signale'
+import signale from './signale'
 
 type Callback = () => void
 type Hook = (callback: Callback) => void

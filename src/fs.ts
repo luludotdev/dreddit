@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import * as fs from 'fs'
 import { promisify } from 'util'
-import { panic } from './util'
+import { panic } from './signale'
 
 export const readFile = promisify(fs.readFile)
 export const readSync = fs.readFileSync

@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { existsSync, loadConfig, readSync } from './fs'
 import { SortLevel } from './reddit'
-import { panic } from './util'
+import { panic } from './signale'
 
 const configDir = join(__dirname, '..', 'config')
 const configPath = join(configDir, 'config.json')

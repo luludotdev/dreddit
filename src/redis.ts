@@ -1,7 +1,6 @@
 import Redis from 'ioredis'
-import signale from 'signale'
 import { REDIS_DB, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from './env'
-import { panic } from './util'
+import signale, { panic } from './signale'
 
 export const redis = new Redis({
   db: REDIS_DB,

@@ -1,8 +1,8 @@
 import { WebhookClient } from 'discord.js'
-import signale from 'signale'
 import { config, IPostConfig } from './config'
 import { getPosts, IPost, SortLevel, validateSubreddit } from './reddit'
 import { redis } from './redis'
+import signale from './signale'
 import { filterAsync, resolveArray } from './util'
 
 export default class PostManager {
