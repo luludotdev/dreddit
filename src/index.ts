@@ -1,3 +1,5 @@
+import 'source-map-support/register'
+
 import { config } from './config'
 import { exitHook } from './exitHook'
 import PostManager from './manager'
