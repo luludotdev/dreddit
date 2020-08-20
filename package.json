@@ -16,24 +16,13 @@
     "watch": "tsc --watch",
     "dev": "yarn run watch --sourceMap"
   },
-  "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/ioredis": "^4.0.11",
-    "@types/node": "^12.0.4",
-    "@types/signale": "^1.2.1",
-    "prettier": "^1.17.1",
-    "rimraf": "^2.6.3",
-    "tslint": "^5.17.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.5.1"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "ajv": "^6.10.0",
-    "axios": "^0.19.0",
-    "discord.js": "discordjs/discord.js",
-    "dotenv": "^8.0.0",
-    "ioredis": "^4.9.5",
-    "signale": "^1.4.0"
+    "@lolpants/signale": "^1.5.0",
+    "ajv": "^6.12.4",
+    "axios": "^0.19.2",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "ioredis": "^4.17.3"
   }
 }
