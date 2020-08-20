@@ -8,21 +8,29 @@
   "private": true,
   "scripts": {
     "test": "yarn run check && yarn run lint",
-    "check": "yarn run build --noEmit",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "prebuild": "rimraf build",
-    "build": "tsc",
-    "build:dev": "yarn run build --sourceMap",
-    "watch": "tsc --watch",
-    "dev": "yarn run watch --sourceMap"
+    "check": "yarn run compile --noEmit",
+    "lint": "xo",
+    "compile": "ttsc",
+    "clean": "rimraf build",
+    "prebuild": "yarn run clean",
+    "build": "yarn run compile",
+    "dev": "yarn run build --watch",
+    "debug": "nodemon --inspect"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/ioredis": "^4.17.3",
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.9.7",
+    "typescript-transform-paths": "^2.0.0",
+    "xo": "^0.33.0"
+  },
   "dependencies": {
     "@lolpants/signale": "^1.5.0",
     "ajv": "^6.12.4",
     "axios": "^0.19.2",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
-    "ioredis": "^4.17.3"
+    "ioredis": "^4.17.3",
+    "tslib": "^2.0.1"
   }
 }

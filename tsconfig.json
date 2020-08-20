@@ -12,7 +12,12 @@
     "removeComments": true,
     "downlevelIteration": true,
     "outDir": "./build",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "sourceMap": true,
+    "importHelpers": true,
+    "baseUrl": "./src",
+    "paths": {},
+    "plugins": [{ "transform": "typescript-transform-paths" }]
   },
   "include": [
     "src/**/*.ts"
