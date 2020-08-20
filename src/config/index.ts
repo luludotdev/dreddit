@@ -4,7 +4,7 @@ import { panic } from '~utils/signale'
 import type { IConfig, IPostConfig } from './types'
 import { validateConfig } from './validate'
 
-const configDir = join(__dirname, '..', 'config')
+const configDir = join(__dirname, '..', '..', 'config')
 const configPath = join(configDir, 'config.json')
 const schemaPath = join(configDir, 'config.schema.json')
 
