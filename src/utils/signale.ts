@@ -1,4 +1,4 @@
-import { Signale } from 'signale'
+import { Signale } from '@lolpants/signale'
 
 const signale = new Signale({
   config: {
@@ -9,7 +9,7 @@ const signale = new Signale({
 
 export default signale
 
-export const panic = (message: string | Error, code: number = 1) => {
+export const panic = (message: string | Error, code = 1) => {
   signale.fatal(message)
   return process.exit(code)
 }
