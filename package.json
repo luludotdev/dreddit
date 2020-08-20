@@ -21,6 +21,7 @@
     "@types/ioredis": "^4.17.3",
     "@types/node-cron": "^2.0.3",
     "ttypescript": "^1.5.10",
+    "type-fest": "^0.16.0",
     "typescript": "^3.9.7",
     "typescript-transform-paths": "^1.1.15",
     "xo": "^0.33.0"
