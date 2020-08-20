@@ -1,6 +1,6 @@
 import { redditAxios as axios } from '~utils/axios'
 import { escapePings } from '~utils/pings'
-import type { IPartialPost, IResponse, SortLevel } from './types'
+import type { IPost, IResponse, SortLevel } from './types'
 
 export const validateSubreddit = async (subreddit: string) => {
   try {
@@ -14,12 +14,12 @@ export const validateSubreddit = async (subreddit: string) => {
 export const fetchPosts: (
   subreddit: string,
   level?: SortLevel
-) => Promise<readonly IPartialPost[]> = async (subreddit, level = 'hot') => {
+) => Promise<readonly IPost[]> = async (subreddit, level = 'hot') => {
   const resp = await axios.get<IResponse>(
     `/r/${subreddit}/${level}.json?limit=100`
   )
 
-  const posts: IPartialPost[] = resp.data.data.children
+  const posts: IPost[] = resp.data.data.children
     .map(({ data }) => data)
     .map(({ id, title, url, over_18, permalink }) => ({
       id,
