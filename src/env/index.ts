@@ -12,9 +12,11 @@ export const IS_DEV = !IS_PROD
 const IMGUR_CLID = registerString('IMGUR_CLID')
 if (IMGUR_CLID === undefined) {
   panic('env variable `IMGUR_CLID` must be set')
+  process.exit(0)
 }
 
-export { IMGUR_CLID }
+const imgurClid = IMGUR_CLID
+export { imgurClid as IMGUR_CLID }
 // #endregion
 
 // #region Redis
