@@ -1,10 +1,20 @@
 /* eslint-disable prettier/prettier */
+import { panic } from '~utils/signale'
 import { registerInt, registerString } from "./register"
 
 // #region Globals
 const NODE_ENV = registerString('NODE_ENV')
 const IS_PROD = NODE_ENV?.toLowerCase() === 'production'
 export const IS_DEV = !IS_PROD
+// #endregion
+
+// #region Application
+const IMGUR_CLID = registerString('IMGUR_CLID')
+if (IMGUR_CLID === undefined) {
+  panic('env variable `IMGUR_CLID` must be set')
+}
+
+export { IMGUR_CLID }
 // #endregion
 
 // #region Redis

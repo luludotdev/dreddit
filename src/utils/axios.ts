@@ -1,13 +1,26 @@
-import Axios from 'axios'
+import Axios, { AxiosRequestConfig } from 'axios'
 import { sync as readPkg } from 'read-pkg-up'
+import { IMGUR_CLID } from '~env'
 
 const pkg = readPkg()
 const name = pkg?.packageJson.name ?? 'dreddit'
 const version = pkg?.packageJson.version ?? 'Unknown'
 
-export const axios = Axios.create({
-  baseURL: 'https://www.reddit.com/',
+const common: AxiosRequestConfig = {
   headers: {
     'User-Agent': `${name}/v${version}`,
+  },
+}
+
+export const redditAxios = Axios.create({
+  ...common,
+  baseURL: 'https://www.reddit.com/',
+})
+
+export const imgurAxios = Axios.create({
+  baseURL: 'https://api.imgur.com/3/',
+  headers: {
+    ...common.headers,
+    Authorization: `Client-ID ${IMGUR_CLID}`,
   },
 })
