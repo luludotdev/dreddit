@@ -2,15 +2,18 @@ export const resolveArray: <T>(arrayLike: T | T[]) => T[] = arrayLike =>
   Array.isArray(arrayLike) ? arrayLike : [arrayLike]
 
 export const mapAsync: <T, U>(
-  array: T[],
+  array: T[] | readonly T[],
   callbackfn: (value: T, index: number, array: T[]) => Promise<U>
 ) => Promise<U[]> = async (array, callbackfn) => {
-  // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-  return Promise.all(array.map(callbackfn))
+  return Promise.all(
+    [...array].map(async (value, index, array) =>
+      callbackfn(value, index, array)
+    )
+  )
 }
 
 export const filterAsync: <T>(
-  array: T[],
+  array: T[] | readonly T[],
   callbackfn: (value: T, index: number, array: T[]) => Promise<boolean>
 ) => Promise<T[]> = async (array, callbackfn) => {
   const filterMap = await mapAsync(array, callbackfn)
