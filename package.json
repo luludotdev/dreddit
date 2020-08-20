@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/ioredis": "^4.17.3",
+    "@types/node-cron": "^2.0.3",
     "ttypescript": "^1.5.10",
     "typescript": "^3.9.7",
     "typescript-transform-paths": "^2.0.0",
@@ -31,6 +32,7 @@
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "ioredis": "^4.17.3",
+    "node-cron": "^2.0.3",
     "tslib": "^2.0.1"
   }
 }

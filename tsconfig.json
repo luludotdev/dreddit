@@ -19,6 +19,7 @@
     "paths": {
       "~config": ["config"],
       "~env": ["env"],
+      "~redis": ["redis"],
       "~utils/*": ["utils/*"]
     },
     "plugins": [{ "transform": "typescript-transform-paths" }]
