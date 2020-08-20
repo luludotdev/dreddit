@@ -1,7 +1,8 @@
+import cheerio from 'cheerio'
 import { parse } from 'path'
 import { URL } from 'url'
 import { mapAsync } from '~utils/arrays'
-import { imgurAxios } from '~utils/axios'
+import { redditAxios as axios, imgurAxios } from '~utils/axios'
 import type { IPartialPost, IPost, PostType } from './types'
 
 // #region Parsers
@@ -45,13 +46,30 @@ const parseImgurs: ParserFunction<'image'> = async post => {
 }
 
 const parseGfycat: ParserFunction<'gfy'> = async post => {
-  // TODO: Parse reddit images
-  return undefined
+  const matches = GFY_RX.exec(post.url)
+  if (matches === null) return undefined
+
+  return { ...post, type: 'gfy' }
 }
 
 const parseRedgifs: ParserFunction<'gfy'> = async post => {
-  // TODO: Parse reddit images
-  return undefined
+  const matches = REDGIFS_RX.exec(post.url)
+  if (matches === null) return undefined
+
+  const resp = await axios.get(post.url)
+  const $ = cheerio.load(resp.data)
+
+  const sources = $('source[type="video/mp4"]')
+  const urls: string[] = []
+
+  sources.each((_, source) => {
+    urls.push(source.attribs.src)
+  })
+
+  const url = urls.find(x => x.includes('-mobile') === false)
+  if (url === undefined) return undefined
+
+  return { ...post, type: 'gfy', url }
 }
 // #endregion
 
@@ -60,7 +78,7 @@ export const parseAll: (
   posts: readonly IPartialPost[]
 ) => Promise<ReadonlyArray<IPost<PostType>>> = async posts => {
   const allPosts = await Promise.all([
-    // MapAsync(posts, async post => parseImages(post)),
+    mapAsync(posts, async post => parseImages(post)),
     mapAsync(posts, async post => parseImgurs(post)),
     mapAsync(posts, async post => parseGfycat(post)),
     mapAsync(posts, async post => parseRedgifs(post)),

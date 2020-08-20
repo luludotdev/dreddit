@@ -18,6 +18,7 @@
     "debug": "nodemon --inspect"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.21",
     "@types/ioredis": "^4.17.3",
     "@types/node-cron": "^2.0.3",
     "ttypescript": "^1.5.10",
@@ -30,6 +31,7 @@
     "@lolpants/signale": "^1.5.0",
     "ajv": "^6.12.4",
     "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "ioredis": "^4.17.3",
