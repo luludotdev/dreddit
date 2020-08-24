@@ -1,6 +1,6 @@
 {
   "name": "dreddit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "build/index.js",
   "repository": "git@github.com:lolPants/dreddit.git",
   "author": "Jack Baron <jackmbaron@gmail.com>",
