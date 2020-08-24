@@ -13,3 +13,4 @@ export const getPosts: (
 }
 
 export { validateSubreddit } from './fetchers'
+export type { IPost, SortLevel } from './types'

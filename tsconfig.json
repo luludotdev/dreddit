@@ -19,6 +19,7 @@
     "paths": {
       "~config": ["config"],
       "~env": ["env"],
+      "~manager": ["manager"],
       "~reddit": ["reddit"],
       "~redis": ["redis"],
       "~utils/*": ["utils/*"]
