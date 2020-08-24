@@ -57,8 +57,9 @@ export const createManager: (
       const message = lines.join('\n')
       await sendPost(message, ...files)
       await markSeen()
-    } catch {
+    } catch (error) {
       signale.warn(`Failed to post ${post.id} from /r/${subreddit}/${level}`)
+      signale.warn(error)
     }
   }
 
