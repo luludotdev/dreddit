@@ -3,11 +3,11 @@ import { parse } from 'path'
 import { URL } from 'url'
 import { mapAsync } from '~utils/arrays'
 import { redditAxios as axios, imgurAxios } from '~utils/axios'
-import type { IPost } from './types'
+import type { IPartialPost, IPost } from './types'
 
 // #region Parsers
 type ParserFunction = (
-  post: IPost
+  post: IPartialPost
 ) => IPost | undefined | Promise<IPost | undefined>
 
 const IMGUR_RX = /https?:\/\/imgur\.com\/([a-z\d]{5,})/i
@@ -33,7 +33,7 @@ export const parseSimple: ParserFunction = async post => {
   const isValid = VALID_EXTS.has(ext)
   if (isValid === false) return undefined
 
-  return { ...post, type: 'image', url: `${protocol}//${host}${pathname}` }
+  return { ...post, type: 'embed', url: `${protocol}//${host}${pathname}` }
 }
 
 const parseImgurs: ParserFunction = async post => {
@@ -47,7 +47,7 @@ const parseImgurs: ParserFunction = async post => {
       resp.data?.data?.mp4 ?? resp.data?.data?.link
 
     if (url === undefined) return undefined
-    return { ...post, type: 'image', url }
+    return { ...post, type: 'embed', url }
   } catch {
     return undefined
   }
@@ -57,7 +57,7 @@ const parseGfycat: ParserFunction = async post => {
   const matches = GFY_RX.exec(post.url)
   if (matches === null) return undefined
 
-  return { ...post, type: 'gfy' }
+  return { ...post, type: 'text' }
 }
 
 const parseRedgifs: ParserFunction = async post => {
@@ -77,13 +77,13 @@ const parseRedgifs: ParserFunction = async post => {
   const url = urls.find(x => x.includes('-mobile') === false)
   if (url === undefined) return undefined
 
-  return { ...post, type: 'gfy', url }
+  return { ...post, type: 'text', url }
 }
 // #endregion
 
 // #region Parse All
 export const parseAll: (
-  posts: readonly IPost[]
+  posts: readonly IPartialPost[]
 ) => Promise<readonly IPost[]> = async posts => {
   const allPosts = await Promise.all([
     mapAsync(posts, async post => parseSimple(post)),
