@@ -23,5 +23,5 @@ export { imgurClid as IMGUR_CLID }
 export const REDIS_HOST = registerString('REDIS_HOST') ?? (IS_DEV ? 'localhost' : 'redis')
 export const REDIS_PORT = registerInt('REDIS_PORT') ?? 6379
 export const REDIS_PASS = registerString('REDIS_PASS')
-export const REDIS_DB_BASE = registerInt('REDIS_DB_BASE') ?? 0
+export const REDIS_DB_OFFSET = registerInt('REDIS_DB_OFFSET') ?? 0
 // #endregion

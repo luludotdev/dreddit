@@ -1,10 +1,10 @@
 import Redis from 'ioredis'
 import { schedule } from 'node-cron'
-import { REDIS_DB_BASE, REDIS_HOST, REDIS_PASS, REDIS_PORT } from '~env'
+import { REDIS_DB_OFFSET, REDIS_HOST, REDIS_PASS, REDIS_PORT } from '~env'
 import signale, { panic } from '~utils/signale'
 
 export const redis = new Redis({
-  db: REDIS_DB_BASE + 0,
+  db: REDIS_DB_OFFSET + 0,
   host: REDIS_HOST,
   password: REDIS_PASS,
   port: REDIS_PORT,
