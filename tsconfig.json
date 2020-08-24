@@ -23,7 +23,7 @@
       "~redis": ["redis"],
       "~utils/*": ["utils/*"]
     },
-    "plugins": [{ "transform": "typescript-transform-paths" }]
+    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
   },
   "include": [
     "src/**/*.ts"
