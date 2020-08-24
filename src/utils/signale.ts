@@ -2,8 +2,8 @@ import { Signale } from '@lolpants/signale'
 
 const signale = new Signale({
   config: {
-    displayDate: true,
-    displayTimestamp: true,
+    displayDate: 'yyyy/mm/dd',
+    displayTimestamp: 'hh:MM:ss',
   },
 })
 
