@@ -13,7 +13,7 @@ services:
       - ./db:/data
 
   worker:
-    image: lolpants/dreddit
+    image: docker.pkg.github.com/lolpants/dreddit/dreddit
     build: '.'
     depends_on:
       - redis
