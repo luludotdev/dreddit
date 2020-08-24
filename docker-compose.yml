@@ -1,4 +1,7 @@
-version: '3.6'
+# This is an example Compose file
+# Please use your own in production
+version: '3.7'
+
 services:
   redis:
     image: redis:alpine
@@ -8,6 +11,7 @@ services:
       - internal
     volumes:
       - ./db:/data
+
   worker:
     image: lolpants/dreddit
     build: '.'
@@ -16,6 +20,7 @@ services:
     networks:
       - internal
     volumes:
-      - ./config/config.json:/usr/app/config/config.json
+      - ./config/config.json:/home/node/app/config/config.json
+
 networks:
   internal:
