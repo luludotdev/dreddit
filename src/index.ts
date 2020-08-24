@@ -9,7 +9,7 @@ import { exitHook } from './exitHook'
 const init = async () => {
   signale.start('Starting Dreddit...')
   const managers = await Promise.all(
-    config.subreddits.map(post => createManager(post))
+    config.subreddits.map(async post => createManager(post))
   )
 
   exitHook(async hook => {
