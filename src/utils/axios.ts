@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios'
+import Axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { sync as readPkg } from 'read-pkg-up'
 import { IMGUR_CLID } from '~env'
 
@@ -24,3 +24,12 @@ export const imgurAxios = Axios.create({
     Authorization: `Client-ID ${IMGUR_CLID}`,
   },
 })
+
+// @ts-expect-error
+export const isAxiosError: (error: unknown) => error is AxiosError = error => {
+  if (typeof error !== 'object') return false
+  if (error === null) return false
+
+  // @ts-expect-error
+  return error.isAxiosError === true
+}

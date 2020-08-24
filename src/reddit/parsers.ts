@@ -2,7 +2,7 @@ import cheerio from 'cheerio'
 import { parse } from 'path'
 import { URL } from 'url'
 import { mapAsync } from '~utils/arrays'
-import { redditAxios as axios, imgurAxios } from '~utils/axios'
+import { redditAxios as axios, imgurAxios, isAxiosError } from '~utils/axios'
 import type { IPartialPost, IPost } from './types'
 
 // #region Parsers
@@ -89,22 +89,30 @@ const checkSizes: (
     if (post === undefined) return undefined
     if (post.type === 'text') return post
 
-    const resp = await axios.head(post.url)
-    if (resp.status === 404) return undefined
-    if (resp.status === 429) return post
+    try {
+      const resp = await axios.head(post.url)
+      const l: string | string[] | undefined = resp.headers['content-length']
+      if (l === undefined) return post
 
-    const l: string | string[] | undefined = resp.headers['content-length']
-    if (l === undefined) return post
+      const lengthString = Array.isArray(l) ? l[0] : l
+      if (lengthString === undefined) return post
+      if (lengthString === '') return post
 
-    const lengthString = Array.isArray(l) ? l[0] : l
-    if (lengthString === undefined) return post
-    if (lengthString === '') return post
+      // Discord Limit for Bots
+      const length = Number.parseInt(lengthString, 10)
+      if (length <= 8_388_119) return post
 
-    // Discord Limit for Bots
-    const length = Number.parseInt(lengthString, 10)
-    if (length <= 8_388_119) return post
+      return { ...post, type: 'text' }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const resp = error.response
+        if (resp?.status === 429) return post
 
-    return { ...post, type: 'text' }
+        return
+      }
+
+      throw error
+    }
   })
 
 export const parseAll: (
