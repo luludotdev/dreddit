@@ -1,4 +1,4 @@
-import signale from './signale'
+import signale from '~utils/signale'
 
 type Callback = () => void
 type Hook = (callback: Callback) => void
@@ -46,8 +46,8 @@ const hookEvent: (event: ExitEvent, code?: number, error?: Error) => void = (
 }
 
 const hookErrorEvent: (event: ExitErrorEvent) => void = event => {
-  process.on(event as NodeJS.Signals, (e: unknown) => {
-    const error: Error | undefined = e as Error
+  process.on(event as NodeJS.Signals, (error_: unknown) => {
+    const error: Error | undefined = error_ as Error
     runHooks(1, error)
   })
 }
