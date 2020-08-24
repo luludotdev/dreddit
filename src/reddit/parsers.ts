@@ -82,6 +82,31 @@ const parseRedgifs: ParserFunction = async post => {
 // #endregion
 
 // #region Parse All
+const checkSizes: (
+  posts: Array<IPost | undefined>
+) => Promise<Array<IPost | undefined>> = async posts =>
+  mapAsync(posts, async post => {
+    if (post === undefined) return undefined
+    if (post.type === 'text') return post
+
+    const resp = await axios.head(post.url)
+    if (resp.status === 404) return undefined
+    if (resp.status === 429) return post
+
+    const l: string | string[] | undefined = resp.headers['content-length']
+    if (l === undefined) return post
+
+    const lengthString = Array.isArray(l) ? l[0] : l
+    if (lengthString === undefined) return post
+    if (lengthString === '') return post
+
+    // Discord Limit for Bots
+    const length = Number.parseInt(lengthString, 10)
+    if (length <= 8_388_119) return post
+
+    return { ...post, type: 'text' }
+  })
+
 export const parseAll: (
   posts: readonly IPartialPost[]
 ) => Promise<readonly IPost[]> = async posts => {
@@ -93,6 +118,7 @@ export const parseAll: (
   ])
 
   const flat = ([] as Array<IPost | undefined>).concat(...allPosts)
-  return flat.filter(x => typeof x !== 'undefined') as readonly IPost[]
+  const checked = await checkSizes(flat)
+  return checked.filter(x => typeof x !== 'undefined') as IPost[]
 }
 // #endregion
