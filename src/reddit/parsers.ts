@@ -70,7 +70,8 @@ const parseRedgifs: ParserFunction = async post => {
   const sources = $('source[type="video/mp4"]')
   const urls: string[] = []
 
-  sources.each((_, source) => {
+  sources.each((_, s) => {
+    const source = s as cheerio.TagElement
     urls.push(source.attribs.src)
   })
 
@@ -103,7 +104,7 @@ const checkSizes: (
       if (length <= 8_388_119) return post
 
       return { ...post, type: 'text' }
-    } catch (error) {
+    } catch (error: unknown) {
       if (isAxiosError(error)) {
         const resp = error.response
         if (resp?.status === 429) return post
