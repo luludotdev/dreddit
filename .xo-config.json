@@ -10,6 +10,7 @@
       "ignoreDeclarationSort": true
     }],
 
+    "import/extensions": 0,
     "import/first": "error",
     "import/no-unassigned-import": 0,
     "import/newline-after-import": "error",

@@ -10,9 +10,9 @@ export const redis = new Redis({
   port: REDIS_PORT,
 })
 
-redis.on('error', err => {
+redis.on('error', error => {
   signale.fatal('Failed to connect to Redis Instance!')
-  panic(err)
+  panic(error)
 })
 
 redis.on('ready', () => {

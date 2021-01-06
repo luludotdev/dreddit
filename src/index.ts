@@ -19,7 +19,7 @@ const init = async () => {
 
   exitHook(async hook => {
     await mapAsync(managers, async manager => manager?.cleanup())
-    return hook()
+    hook()
   })
 }
 
