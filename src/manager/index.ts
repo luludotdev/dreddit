@@ -38,6 +38,8 @@ export const createManager: (
   const generator = generatePosts(subreddit, level, db)
   const loop = async () => {
     const { value: post } = await generator.next()
+    if (post === null) return
+
     const markSeen = async () => {
       await db.sadd(subreddit, post.id)
     }
