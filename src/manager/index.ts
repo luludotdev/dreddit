@@ -14,8 +14,6 @@ interface IManager {
 export const createManager: (
   post: IPostConfig
 ) => Promise<IManager | undefined> = async postConfig => {
-  const db = redis.duplicate()
-
   const subreddit = postConfig.subreddit
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(30, postConfig.interval ?? config.interval)
@@ -35,13 +33,13 @@ export const createManager: (
     return new WebhookClient(id, token)
   })
 
-  const generator = generatePosts(subreddit, level, db)
+  const generator = generatePosts(subreddit, level, redis)
   const loop = async () => {
     const { value: post } = await generator.next()
     if (post === null) return
 
     const markSeen = async () => {
-      await db.sadd(subreddit, post.id)
+      await redis.sadd(subreddit, post.id)
     }
 
     if (post.nsfw && allowNSFW === false) return markSeen()
