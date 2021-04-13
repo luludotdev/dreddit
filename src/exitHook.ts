@@ -1,82 +1,40 @@
-import signale from '~utils/signale'
+type AsyncExitHook = () => void
+type ExitHook = (exit: AsyncExitHook, error?: Error) => void | Promise<void>
 
-type Callback = () => void
-type Hook = (callback: Callback) => void
+const hooks: Set<ExitHook> = new Set()
 
-const hooks: Set<Hook> = new Set()
-const timeout = 10 * 1000
-
-let running = false
-
-export const exitHook: (hook: Hook) => void = hook => {
+export const exitHook = (hook: ExitHook) => {
   hooks.add(hook)
-
-  if (hooks.size === 1) {
-    hookErrorEvent('uncaughtException')
-    hookErrorEvent('unhandledRejection')
-
-    hookEvent('exit')
-    hookEvent('beforeExit', 0)
-    hookEvent('SIGHUP', 128 + 1)
-    hookEvent('SIGINT', 128 + 2)
-    hookEvent('SIGTERM', 128 + 15)
-    hookEvent('SIGBREAK', 128 + 21)
-  }
 }
 
-type ExitEvent =
-  | 'exit'
-  | 'beforeExit'
-  | 'SIGHUP'
-  | 'SIGINT'
-  | 'SIGTERM'
-  | 'SIGBREAK'
+let terminating = false
+const cleanup = async (error?: Error, code?: number) => {
+  if (terminating === true) return
+  terminating = true
 
-type ExitErrorEvent = 'uncaughtException' | 'unhandledRejection'
+  const jobs = [...hooks].map(
+    async h =>
+      new Promise<void>(resolve => {
+        void h(resolve, error)
+      })
+  )
 
-const hookEvent: (event: ExitEvent, code?: number, error?: Error) => void = (
-  event,
-  code,
-  error
-) => {
-  process.on(event as NodeJS.Signals, (c: unknown) => {
-    if (event === 'exit') runHooks(c as number, error)
-    else runHooks(code, error)
-  })
+  await Promise.all(jobs)
+  process.exit(code !== undefined ? code : error !== undefined ? 1 : 0)
 }
 
-const hookErrorEvent: (event: ExitErrorEvent) => void = event => {
-  process.on(event as NodeJS.Signals, (error_: unknown) => {
-    const error: Error | undefined = error_ as Error
-    runHooks(1, error)
-  })
+export const shutdown = (code?: number) => {
+  void cleanup(undefined, code)
 }
 
-const runHooks: (code?: number, error?: Error) => void = (code, error) => {
-  if (running) return undefined
-  running = true
+process.on('SIGHUP', async () => cleanup())
+process.on('SIGINT', async () => cleanup())
+process.on('SIGTERM', async () => cleanup())
+process.on('SIGBREAK', async () => cleanup())
 
-  setTimeout(() => {
-    printError(error)
-    process.exit(code)
-  }, timeout)
-
-  for (const hook of hooks) {
-    hook(() => {
-      hooks.delete(hook)
-      checkHooks(code, error)
-    })
-  }
-}
-
-const printError: (error?: Error) => void = error => {
-  if (!error) return undefined
-  signale.fatal(error)
-}
-
-const checkHooks: (code?: number, error?: Error) => void = (code, error) => {
-  if (hooks.size !== 0) return undefined
-
-  printError(error)
-  return process.exit(code)
-}
+process.on('uncaughtException', async error => cleanup(error))
+process.on('unhandledRejection', async error => {
+  await (error instanceof Error
+    ? cleanup(error)
+    : cleanup(new Error('Unknown rejection')))
+})

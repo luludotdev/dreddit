@@ -17,9 +17,9 @@ const init = async () => {
     return panic('All subreddits could not be reached!')
   }
 
-  exitHook(async hook => {
+  exitHook(async exit => {
     await mapAsync(managers, async manager => manager?.cleanup())
-    hook()
+    exit()
   })
 }
 
