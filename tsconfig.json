@@ -17,11 +17,11 @@
     "importHelpers": true,
     "baseUrl": "./src",
     "paths": {
-      "~config": ["config"],
-      "~env": ["env"],
-      "~manager": ["manager"],
-      "~reddit": ["reddit"],
-      "~redis": ["redis"],
+      "~config/*": ["config/*"],
+      "~env/*": ["env/*"],
+      "~manager/*": ["manager/*"],
+      "~reddit/*": ["reddit/*"],
+      "~redis/*": ["redis/*"],
       "~utils/*": ["utils/*"]
     },
     "plugins": [{ "transform": "@zerollup/ts-transform-paths" }]
