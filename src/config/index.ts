@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
-import { panic } from '~utils/signale'
-import type { IConfig, IPostConfig } from './types'
-import { validateConfig } from './validate'
+import { panic } from '~utils/signale.js'
+import type { IConfig, IPostConfig } from './types.js'
+import { validateConfig } from './validate.js'
 
 const configDir = join(__dirname, '..', '..', 'config')
 const configPath = join(configDir, 'config.json')

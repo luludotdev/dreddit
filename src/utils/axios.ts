@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { readPackageUpSync as readPkg } from 'read-pkg-up'
-import { IMGUR_CLID } from '~env'
+import { IMGUR_CLID } from '~env/index.js'
 
 const pkg = readPkg()
 const name = pkg?.packageJson.name ?? 'dreddit'

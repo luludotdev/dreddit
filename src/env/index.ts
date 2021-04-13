@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { panic } from '~utils/signale'
-import { registerInt, registerString } from "./register"
+import { panic } from '~utils/signale.js'
+import { registerInt, registerString } from './register.js'
 
 // #region Globals
 const NODE_ENV = registerString('NODE_ENV')

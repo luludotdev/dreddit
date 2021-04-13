@@ -1,4 +1,4 @@
-import { Except } from 'type-fest'
+import type { Except } from 'type-fest'
 
 export type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
 export type PostType = 'text' | 'embed'

@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 import { PathLike, readFileSync } from 'fs'
-import { panic } from '~utils/signale'
+import { panic } from '~utils/signale.js'
 
 /* eslint-disable @typescript-eslint/ban-types */
 export const validateConfig: <S extends object = {}>(

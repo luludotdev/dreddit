@@ -1,4 +1,4 @@
-import { redis } from './db'
+import { redis } from './db.js'
 
 export const awaitRedis: () => Promise<void> = async () =>
   new Promise(resolve => {

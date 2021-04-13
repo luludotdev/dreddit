@@ -1,6 +1,6 @@
-import { fetchPosts } from './fetchers'
-import { parseAll } from './parsers'
-import type { IPost, SortLevel } from './types'
+import { fetchPosts } from './fetchers.js'
+import { parseAll } from './parsers.js'
+import type { IPost, SortLevel } from './types.js'
 
 export const getPosts: (
   subreddit: string,
@@ -12,5 +12,5 @@ export const getPosts: (
   return resolved
 }
 
-export { validateSubreddit } from './fetchers'
-export type { IPost, SortLevel } from './types'
+export { validateSubreddit } from './fetchers.js'
+export type { IPost, SortLevel } from './types.js'

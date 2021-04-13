@@ -1,6 +1,6 @@
-import type { IPost, SortLevel } from '~reddit'
-import { getPosts } from '~reddit'
-import { redis } from '~redis'
+import type { IPost, SortLevel } from '~reddit/index.js'
+import { getPosts } from '~reddit/index.js'
+import { redis } from '~redis/index.js'
 
 /* eslint-disable no-await-in-loop */
 export async function* generatePosts(

@@ -1,11 +1,11 @@
 import { WebhookClient } from 'discord.js'
-import { config } from '~config'
-import type { IPostConfig } from '~config'
-import { validateSubreddit } from '~reddit'
-import { redis } from '~redis'
-import { resolveArray } from '~utils/arrays'
-import signale from '~utils/signale'
-import { generatePosts } from './generator'
+import { config } from '~config/index.js'
+import type { IPostConfig } from '~config/index.js'
+import { validateSubreddit } from '~reddit/index.js'
+import { redis } from '~redis/index.js'
+import { resolveArray } from '~utils/arrays.js'
+import signale from '~utils/signale.js'
+import { generatePosts } from './generator.js'
 
 interface IManager {
   cleanup: () => void | Promise<void>

@@ -1,10 +1,10 @@
-import 'source-map-support/register'
+import 'source-map-support/register.js'
 
-import { config } from '~config'
-import { createManager } from '~manager'
-import { mapAsync } from '~utils/arrays'
-import signale, { panic } from '~utils/signale'
-import { exitHook } from './exitHook'
+import { config } from '~config/index.js'
+import { createManager } from '~manager/index.js'
+import { mapAsync } from '~utils/arrays.js'
+import signale, { panic } from '~utils/signale.js'
+import { exitHook } from './exitHook.js'
 
 const init = async () => {
   signale.start('Starting Dreddit...')
