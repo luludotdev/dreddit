@@ -12,6 +12,7 @@ jobs:
         run: |
           IMAGE_NAME=dreddit
 
+          GIT_REPO='https://github.com/${{ github.repository }}'
           DOCKER_USER=`echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]'`
           DOCKER_IMAGE=ghcr.io/$IMAGE_NAME
 
@@ -20,6 +21,7 @@ jobs:
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
 
+          echo ::set-output name=git_repo::${GIT_REPO}
           echo ::set-output name=docker_user::${DOCKER_USER}
           echo ::set-output name=docker_image::${DOCKER_IMAGE}
           echo ::set-output name=version::${VERSION}
@@ -39,4 +41,5 @@ jobs:
           context: .
           push: ${{ (github.ref == 'refs/heads/master') || (contains(github.ref, 'refs/tags/') == true) }}
           tags: ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
+          build-args: GIT_REPO=${{ steps.prepare.outputs.git_repo }}
           platforms: linux/amd64,linux/arm64

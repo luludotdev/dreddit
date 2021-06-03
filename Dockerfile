@@ -21,6 +21,9 @@ USER node
 COPY --from=builder --chown=node:node /usr/app/build ./build
 COPY --from=builder --chown=node:node /usr/app/config ./config
 
+ARG GIT_REPO
+LABEL org.opencontainers.image.source=${GIT_REPO}
+
 VOLUME ["/home/node/app/config"]
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "."]
