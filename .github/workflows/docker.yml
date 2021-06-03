@@ -14,7 +14,7 @@ jobs:
 
           GIT_REPO='https://github.com/${{ github.repository }}'
           DOCKER_USER=`echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]'`
-          DOCKER_IMAGE=ghcr.io/$IMAGE_NAME
+          DOCKER_IMAGE=ghcr.io/$DOCKER_USER/$IMAGE_NAME
 
           VERSION=`git rev-parse --short HEAD`
           if [[ $GITHUB_REF == refs/tags/* ]]; then
