@@ -42,4 +42,4 @@ jobs:
           push: ${{ (github.ref == 'refs/heads/master') || (contains(github.ref, 'refs/tags/') == true) }}
           tags: ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
           build-args: GIT_REPO=${{ steps.prepare.outputs.git_repo }}
-          platforms: linux/amd64,linux/arm64
+          # platforms: linux/amd64,linux/arm64
