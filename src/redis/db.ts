@@ -1,6 +1,6 @@
 import { createField, field } from '@lolpants/jogger'
 import Redis from 'ioredis'
-import { schedule } from 'node-cron'
+import cron from 'node-cron'
 import process from 'node:process'
 import {
   REDIS_DB_OFFSET,
@@ -44,5 +44,5 @@ redis.on('ready', () => {
 })
 
 redis.on('ready', () => {
-  schedule('0 */12 * * *', async () => redis.bgrewriteaof())
+  cron.schedule('0 */12 * * *', async () => redis.bgrewriteaof())
 })

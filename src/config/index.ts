@@ -1,13 +1,15 @@
 import { field } from '@lolpants/jogger'
 import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { ctxField, logger } from '~logger/index.js'
 import type { IConfig, IPostConfig } from './types.js'
 import { validateConfig } from './validate.js'
 
 const ctx = ctxField('config')
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const configDir = join(__dirname, '..', '..', 'config')
 const configPath = join(configDir, 'config.json')
 const schemaPath = join(configDir, 'config.schema.json')
