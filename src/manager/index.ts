@@ -21,7 +21,7 @@ export const createManager: (
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(30, postConfig.interval ?? config.interval)
 
-  const subredditField = field(subreddit, `/r/${subreddit}`)
+  const subredditField = field('subreddit', `/r/${subreddit}`)
 
   const isValid = await validateSubreddit(subreddit)
   if (isValid === false) {
