@@ -1,6 +1,10 @@
+import { field } from '@lolpants/jogger'
 import Ajv from 'ajv'
 import { PathLike, readFileSync } from 'node:fs'
-import { panic } from '~utils/signale.js'
+import process from 'node:process'
+import { ctxField, logger } from '~logger/index.js'
+
+const ctx = ctxField('config')
 
 /* eslint-disable @typescript-eslint/ban-types */
 export const validateConfig: <S extends object = {}>(
@@ -16,12 +20,16 @@ export const validateConfig: <S extends object = {}>(
     const validate = ajv.compile(schema)
 
     const valid = validate(json)
-    if (!valid) panic('Invalid config format!')
+    if (!valid) {
+      logger.error(ctx, field('message', 'Invalid config format!'))
+      process.exit(1)
+    }
 
     delete json.$schema
     return json
   } catch {
-    panic('Failed to load config!')
+    logger.error(ctx, field('message', 'Failed to load config!'))
+    process.exit(1)
   }
 }
 /* eslint-enable @typescript-eslint/ban-types */

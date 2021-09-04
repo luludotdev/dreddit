@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { panic } from '~utils/signale.js'
+import process from 'node:process'
 import { registerInt, registerString } from './register.js'
 
 // #region Globals
@@ -11,7 +11,7 @@ export const IS_DEV = !IS_PROD
 // #region Application
 const IMGUR_CLID = registerString('IMGUR_CLID')
 if (IMGUR_CLID === undefined) {
-  panic('env variable `IMGUR_CLID` must be set')
+  console.error('env variable `IMGUR_CLID` must be set')
   process.exit(0)
 }
 

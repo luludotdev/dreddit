@@ -1,11 +1,14 @@
+import { field } from '@lolpants/jogger'
 import { WebhookClient } from 'discord.js'
 import { config } from '~config/index.js'
 import type { IPostConfig } from '~config/index.js'
+import { ctxField, errorField, logger } from '~logger/index.js'
 import { validateSubreddit } from '~reddit/index.js'
 import { redis } from '~redis/index.js'
 import { resolveArray } from '~utils/arrays.js'
-import signale from '~utils/signale.js'
 import { generatePosts } from './generator.js'
+
+const ctx = ctxField('manager')
 
 interface IManager {
   cleanup: () => void | Promise<void>
@@ -18,9 +21,15 @@ export const createManager: (
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(30, postConfig.interval ?? config.interval)
 
+  const subredditField = field(subreddit, `/r/${subreddit}`)
+
   const isValid = await validateSubreddit(subreddit)
   if (isValid === false) {
-    signale.warn(`/r/${subreddit} could not be reached!`)
+    logger.warn(
+      ctx,
+      subredditField,
+      field('message', `/r/${subreddit} could not be reached!`)
+    )
     return
   }
 
@@ -58,8 +67,18 @@ export const createManager: (
       await sendPost(message, ...files)
       await markSeen()
     } catch (error: unknown) {
-      signale.warn(`Failed to post ${post.id} from /r/${subreddit}/${level}`)
-      signale.warn(error)
+      logger.warn(
+        ctx,
+        subredditField,
+        field(
+          'message',
+          `Failed to post ${post.id} from /r/${subreddit}/${level}`
+        )
+      )
+
+      if (error instanceof Error) {
+        logger.warn(ctx, subredditField, errorField(error))
+      }
     }
   }
 
@@ -68,13 +87,23 @@ export const createManager: (
     return Promise.all(tasks)
   }
 
-  signale.info(`Posting from /r/${subreddit}/${level} every ${interval}s`)
+  logger.info(
+    ctx,
+    subredditField,
+    field('message', `Posting from /r/${subreddit}/${level} every ${interval}s`)
+  )
+
   void loop()
   const intervalId = setInterval(async () => loop(), 1000 * interval)
 
   return {
     cleanup: () => {
-      signale.complete(`Stopping posts from /r/${subreddit}/${level}`)
+      logger.info(
+        ctx,
+        subredditField,
+        field('message', `Stopping posts from /r/${subreddit}/${level}`)
+      )
+
       clearInterval(intervalId)
     },
   }

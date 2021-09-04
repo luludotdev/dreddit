@@ -1,12 +1,17 @@
+import { createField, field } from '@lolpants/jogger'
 import Redis from 'ioredis'
 import { schedule } from 'node-cron'
+import process from 'node:process'
 import {
   REDIS_DB_OFFSET,
   REDIS_HOST,
   REDIS_PASS,
   REDIS_PORT,
 } from '~env/index.js'
-import signale, { panic } from '~utils/signale.js'
+import { ctxField, errorField, logger } from '~logger/index.js'
+
+const ctx = ctxField('redis')
+const event = createField('event')
 
 export const redis = new Redis({
   db: REDIS_DB_OFFSET + 0,
@@ -16,12 +21,26 @@ export const redis = new Redis({
 })
 
 redis.on('error', error => {
-  signale.fatal('Failed to connect to Redis Instance!')
-  panic(error)
+  if (error instanceof Error) {
+    logger.error(
+      ctx,
+      event('fail'),
+      field('message', 'Failed to connect to Redis Instance!'),
+      errorField(error)
+    )
+  } else {
+    logger.error(
+      ctx,
+      event('fail'),
+      field('message', 'Failed to connect to Redis Instance!')
+    )
+  }
+
+  process.exit(1)
 })
 
 redis.on('ready', () => {
-  signale.info('Connected to Redis')
+  logger.info(ctx, event('ready'))
 })
 
 redis.on('ready', () => {
