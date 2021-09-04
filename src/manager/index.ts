@@ -37,10 +37,9 @@ export const createManager: (
   const postTitles = postConfig.titles ?? false
   const postURLs = postConfig.urls ?? false
 
-  const webhooks = resolveArray(postConfig.webhooks).map(hook => {
-    const [id, token] = hook.split('/').slice(-2)
-    return new WebhookClient(id, token)
-  })
+  const webhooks = resolveArray(postConfig.webhooks).map(
+    hook => new WebhookClient({ url: hook })
+  )
 
   const generator = generatePosts(subreddit, level, redis)
   const loop = async () => {
@@ -83,7 +82,10 @@ export const createManager: (
   }
 
   const sendPost = async (text: string, ...files: string[]) => {
-    const tasks = webhooks.map(async hook => hook.send(text, { files }))
+    const tasks = webhooks.map(async hook =>
+      hook.send({ content: text, files })
+    )
+
     return Promise.all(tasks)
   }
 
