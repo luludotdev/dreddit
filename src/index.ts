@@ -30,8 +30,6 @@ const init = async () => {
   }
 
   exitHook(async (exit, error) => {
-    await mapAsync(managers, async manager => manager?.cleanup())
-
     const actionField = action('shutdown')
     if (error) {
       logger.error(ctx, actionField, errorField(error))
@@ -40,6 +38,8 @@ const init = async () => {
     }
 
     await flush()
+    await mapAsync(managers, async manager => manager?.cleanup())
+
     exit()
   })
 }
