@@ -4,13 +4,12 @@ export const resolveArray: <T>(arrayLike: T | T[]) => T[] = arrayLike =>
 export const mapAsync: <T, U>(
   array: T[] | readonly T[],
   callbackfn: (value: T, index: number, array: T[]) => Promise<U>
-) => Promise<U[]> = async (array, callbackfn) => {
-  return Promise.all(
+) => Promise<U[]> = async (array, callbackfn) =>
+  Promise.all(
     [...array].map(async (value, index, array) =>
       callbackfn(value, index, array)
     )
   )
-}
 
 export const filterAsync: <T>(
   array: T[] | readonly T[],

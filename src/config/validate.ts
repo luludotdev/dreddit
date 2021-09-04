@@ -1,5 +1,5 @@
 import Ajv from 'ajv'
-import { PathLike, readFileSync } from 'fs'
+import { PathLike, readFileSync } from 'node:fs'
 import { panic } from '~utils/signale.js'
 
 /* eslint-disable @typescript-eslint/ban-types */

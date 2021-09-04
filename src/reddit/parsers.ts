@@ -1,6 +1,6 @@
 import cheerio from 'cheerio'
-import { parse } from 'path'
-import { URL } from 'url'
+import { parse } from 'node:path'
+import { URL } from 'node:url'
 import { mapAsync } from '~utils/arrays.js'
 import { redditAxios as axios, imgurAxios, isAxiosError } from '~utils/axios.js'
 import type { IPartialPost, IPost } from './types.js'

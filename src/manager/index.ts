@@ -14,7 +14,7 @@ interface IManager {
 export const createManager: (
   post: IPostConfig
 ) => Promise<IManager | undefined> = async postConfig => {
-  const subreddit = postConfig.subreddit
+  const { subreddit } = postConfig
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(30, postConfig.interval ?? config.interval)
 
