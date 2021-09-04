@@ -41,10 +41,17 @@ const parseImgurs: ParserFunction = async post => {
   if (matches === null) return undefined
 
   try {
-    const resp = await imgurAxios.get(`/image/${matches[1]}`)
+    interface ImgurResponse {
+      data: {
+        id: string
+        title: string | null
+        link: string
+        mp4?: string
+      }
+    }
 
-    const url: string | undefined =
-      resp.data?.data?.mp4 ?? resp.data?.data?.link
+    const resp = await imgurAxios.get<ImgurResponse>(`/image/${matches[1]}`)
+    const url = resp.data?.data?.mp4 ?? resp.data?.data?.link
 
     if (url === undefined) return undefined
     return { ...post, type: 'embed', url }
