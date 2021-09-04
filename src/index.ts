@@ -29,19 +29,22 @@ const init = async () => {
     process.exit(1)
   }
 
-  exitHook(async (exit, error) => {
-    const actionField = action('shutdown')
-    if (error) {
-      logger.error(ctx, actionField, errorField(error))
-    } else {
-      logger.info(ctx, actionField)
-    }
-
-    await flush()
+  exitHook(async exit => {
     await mapAsync(managers, async manager => manager?.cleanup())
-
     exit()
   })
 }
+
+exitHook(async (exit, error) => {
+  const actionField = action('exit')
+  if (error) {
+    logger.error(ctx, actionField, errorField(error))
+  } else {
+    logger.info(ctx, actionField)
+  }
+
+  await flush()
+  exit()
+})
 
 void init()
