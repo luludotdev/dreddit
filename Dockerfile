@@ -1,29 +1,54 @@
-FROM node:12-alpine AS builder
-WORKDIR /usr/app
+# syntax=docker/dockerfile:1.2
+FROM node:16-alpine as base
+FROM base AS deps-common
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+WORKDIR /app
+COPY ./package.json ./yarn.lock ./
+
+# ---
+FROM deps-common AS deps-dev
+RUN yarn install --ignore-optional --frozen-lockfile && \
+  yarn cache clean
+
+# ---
+FROM deps-common AS deps-prod
+RUN apk add --no-cache --virtual build-deps python3 alpine-sdk autoconf libtool automake && \
+  yarn install --production=true --frozen-lockfile && \
+  yarn cache clean && \
+  apk del build-deps
+
+# ---
+FROM base AS builder
+WORKDIR /app
 
 COPY . .
-RUN yarn test && yarn build
+COPY --from=deps-dev /app/node_modules ./node_modules
+RUN yarn build
 
-FROM node:12-alpine
-ENV NODE_ENV=production
+# ---
+FROM base AS runner
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-WORKDIR /home/node/app
+WORKDIR /app
+ENV NODE_ENV production
 
-COPY package.json yarn.lock ./
-RUN apk add --no-cache tini && \
-  yarn install --frozen-lockfile --production
+RUN apk add --no-cache tini
 
-USER node
-COPY --from=builder --chown=node:node /usr/app/build ./build
-COPY --from=builder --chown=node:node /usr/app/config ./config
+COPY --from=deps-prod /app/node_modules ./node_modules
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/package.json ./package.json
+
+RUN mkdir /app/logs && \
+  addgroup -g 1001 -S nodejs && \
+  adduser -S nodejs -u 1001 && \
+  chown -R nodejs:nodejs /app/build && \
+  chown -R nodejs:nodejs /app/logs
+
+USER nodejs
+VOLUME ["/app/config"]
 
 ARG GIT_REPO
 LABEL org.opencontainers.image.source=${GIT_REPO}
 
-VOLUME ["/home/node/app/config"]
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "."]
