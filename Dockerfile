@@ -46,6 +46,7 @@ RUN mkdir /app/logs && \
 
 USER nodejs
 VOLUME ["/app/config"]
+VOLUME ["/app/logs"]
 
 ARG GIT_REPO
 LABEL org.opencontainers.image.source=${GIT_REPO}
