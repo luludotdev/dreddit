@@ -7,6 +7,8 @@ import { ctxField, logger } from '~logger/index.js'
 const ctx = ctxField('config')
 
 /* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 export const validateConfig: <S extends object = {}>(
   path: PathLike,
   schema?: S
@@ -25,6 +27,7 @@ export const validateConfig: <S extends object = {}>(
       process.exit(1)
     }
 
+    // @ts-expect-error Untyped property
     delete json.$schema
     return json
   } catch {
@@ -32,4 +35,6 @@ export const validateConfig: <S extends object = {}>(
     process.exit(1)
   }
 }
+/* eslint-enable @typescript-eslint/no-unsafe-return */
+/* eslint-enable @typescript-eslint/no-unsafe-assignment */
 /* eslint-enable @typescript-eslint/ban-types */

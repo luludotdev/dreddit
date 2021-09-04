@@ -24,6 +24,7 @@ if (existsSync(schemaPath) === false) {
   process.exit(1)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const schema = JSON.parse(readFileSync(schemaPath, 'utf8'))
 export const config = validateConfig<IConfig>(configPath, schema)
 
