@@ -133,8 +133,9 @@ export const parseAll: (
     mapAsync(posts, async post => parseRedgifs(post)),
   ])
 
-  const flat = ([] as Array<IPost | undefined>).concat(...allPosts)
+  const flat = allPosts.flat()
   const checked = await checkSizes(flat)
-  return checked.filter(x => typeof x !== 'undefined') as IPost[]
+
+  return checked.filter((x): x is IPost => typeof x !== 'undefined')
 }
 // #endregion
