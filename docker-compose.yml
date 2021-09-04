@@ -13,14 +13,14 @@ services:
       - ./db:/data
 
   worker:
-    image: docker.pkg.github.com/lolpants/dreddit/dreddit
+    image: ghcr.io/lolpants/dreddit
     build: '.'
     depends_on:
       - redis
     networks:
       - internal
     volumes:
-      - ./config/config.json:/home/node/app/config/config.json
+      - ./config/config.json:/app/config/config.json:ro
 
 networks:
   internal:
