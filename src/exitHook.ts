@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 type AsyncExitHook = () => void
 type ExitHook = (exit: AsyncExitHook, error?: Error) => void | Promise<void>
 
@@ -27,6 +29,7 @@ export const shutdown = (code?: number) => {
   void cleanup(undefined, code)
 }
 
+process.on('exit', async () => cleanup())
 process.on('SIGHUP', async () => cleanup())
 process.on('SIGINT', async () => cleanup())
 process.on('SIGTERM', async () => cleanup())
