@@ -99,7 +99,9 @@ const checkSizes: (
 
     try {
       const resp = await axios.head(post.url)
-      const l: string | string[] | undefined = resp.headers['content-length']
+      const headers = resp.headers as Record<string, string | string[]>
+
+      const l = headers['content-length']
       if (l === undefined) return post
 
       const lengthString = Array.isArray(l) ? l[0] : l
