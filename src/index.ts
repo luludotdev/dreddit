@@ -12,7 +12,7 @@ const ctx = ctxField('main')
 const action = createField('action')
 
 const init = async () => {
-  logger.info(ctx)
+  logger.info(ctx, action('init'))
 
   const managers = await Promise.all(
     config.subreddits.map(async post => createManager(post))
