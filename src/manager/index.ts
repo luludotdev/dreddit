@@ -65,6 +65,14 @@ export const createManager: (
       const message = lines.join('\n')
       await sendPost(message, ...files)
       await markSeen()
+
+      logger.debug(
+        ctx,
+        subredditField,
+        field('action', 'post'),
+        field('id', post.id),
+        field('url', post.url)
+      )
     } catch (error: unknown) {
       logger.warn(
         ctx,
