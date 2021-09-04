@@ -22,7 +22,8 @@
       "~manager/*": ["manager/*"],
       "~reddit/*": ["reddit/*"],
       "~redis/*": ["redis/*"],
-      "~utils/*": ["utils/*"]
+      "~utils/*": ["utils/*"],
+      "~logger/*": ["logger.js"]
     },
     "plugins": [{ "transform": "typescript-transform-paths" }]
   },
