@@ -1,11 +1,11 @@
 import type { SortLevel } from '~reddit/index.js'
 
-export interface IConfig {
+export interface Config {
   interval: number
-  subreddits: IPostConfig[]
+  subreddits: PostConfig[]
 }
 
-export interface IPostConfig {
+export interface PostConfig {
   subreddit: string
   level?: SortLevel
 

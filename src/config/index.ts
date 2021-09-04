@@ -4,7 +4,7 @@ import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { ctxField, logger } from '~logger/index.js'
-import type { IConfig, IPostConfig } from './types.js'
+import type { Config, PostConfig } from './types.js'
 import { validateConfig } from './validate.js'
 
 const ctx = ctxField('config')
@@ -26,6 +26,6 @@ if (existsSync(schemaPath) === false) {
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const schema = JSON.parse(readFileSync(schemaPath, 'utf8'))
-export const config = validateConfig<IConfig>(configPath, schema)
+export const config = validateConfig<Config>(configPath, schema)
 
-export type { IConfig, IPostConfig }
+export type { Config, PostConfig }

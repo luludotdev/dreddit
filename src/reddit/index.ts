@@ -1,11 +1,11 @@
 import { fetchPosts } from './fetchers.js'
 import { parseAll } from './parsers.js'
-import type { IPost, SortLevel } from './types.js'
+import type { Post, SortLevel } from './types.js'
 
 export const getPosts: (
   subreddit: string,
   level?: SortLevel
-) => Promise<readonly IPost[]> = async (subreddit, level = 'hot') => {
+) => Promise<readonly Post[]> = async (subreddit, level = 'hot') => {
   const partials = await fetchPosts(subreddit, level)
   const resolved = await parseAll(partials)
 
@@ -13,4 +13,4 @@ export const getPosts: (
 }
 
 export { validateSubreddit } from './fetchers.js'
-export type { IPost, SortLevel } from './types.js'
+export type { Post, SortLevel } from './types.js'

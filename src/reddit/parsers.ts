@@ -3,12 +3,12 @@ import { parse } from 'node:path'
 import { URL } from 'node:url'
 import { mapAsync } from '~utils/arrays.js'
 import { redditAxios as axios, imgurAxios, isAxiosError } from '~utils/axios.js'
-import type { IPartialPost, IPost } from './types.js'
+import type { PartialPost, Post } from './types.js'
 
 // #region Parsers
 type ParserFunction = (
-  post: IPartialPost
-) => IPost | undefined | Promise<IPost | undefined>
+  post: PartialPost
+) => Post | undefined | Promise<Post | undefined>
 
 const IMGUR_RX = /https?:\/\/imgur\.com\/([a-z\d]{5,})/i
 const GFY_RX = /https?:\/\/gfycat\.com\/(.+)/i
@@ -91,8 +91,8 @@ const parseRedgifs: ParserFunction = async post => {
 
 // #region Parse All
 const checkSizes: (
-  posts: Array<IPost | undefined>
-) => Promise<Array<IPost | undefined>> = async posts =>
+  posts: Array<Post | undefined>
+) => Promise<Array<Post | undefined>> = async posts =>
   mapAsync(posts, async post => {
     if (post === undefined) return undefined
     if (post.type === 'text') return post
@@ -126,8 +126,8 @@ const checkSizes: (
   })
 
 export const parseAll: (
-  posts: readonly IPartialPost[]
-) => Promise<readonly IPost[]> = async posts => {
+  posts: readonly PartialPost[]
+) => Promise<readonly Post[]> = async posts => {
   const allPosts = await Promise.all([
     mapAsync(posts, async post => parseSimple(post)),
     mapAsync(posts, async post => parseImgurs(post)),
@@ -138,6 +138,6 @@ export const parseAll: (
   const flat = allPosts.flat()
   const checked = await checkSizes(flat)
 
-  return checked.filter((x): x is IPost => typeof x !== 'undefined')
+  return checked.filter((x): x is Post => typeof x !== 'undefined')
 }
 // #endregion

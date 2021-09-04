@@ -1,4 +1,4 @@
-import type { IPost, SortLevel } from '~reddit/index.js'
+import type { Post, SortLevel } from '~reddit/index.js'
 import { getPosts } from '~reddit/index.js'
 import { redis } from '~redis/index.js'
 
@@ -7,7 +7,7 @@ export async function* generatePosts(
   subreddit: string,
   level: SortLevel,
   db = redis
-): AsyncGenerator<IPost | null, never, never> {
+): AsyncGenerator<Post | null, never, never> {
   while (true) {
     const posts = await getPosts(subreddit, level)
 

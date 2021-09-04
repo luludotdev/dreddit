@@ -3,7 +3,7 @@ import type { Except } from 'type-fest'
 export type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
 export type PostType = 'text' | 'embed'
 
-export interface IPost {
+export interface Post {
   id: string
   title: string
   source: string
@@ -13,9 +13,9 @@ export interface IPost {
   nsfw: boolean
 }
 
-export type IPartialPost = Except<IPost, 'type'>
+export type PartialPost = Except<Post, 'type'>
 
-export interface IResponse {
+export interface Response {
   kind: 'Listing'
 
   data: {
