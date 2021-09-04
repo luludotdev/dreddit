@@ -19,17 +19,18 @@ export const redditAxios = Axios.create({
 
 export const imgurAxios = Axios.create({
   baseURL: 'https://api.imgur.com/3/',
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   headers: {
     ...common.headers,
     Authorization: `Client-ID ${IMGUR_CLID}`,
   },
 })
 
-// @ts-expect-error
+// @ts-expect-error Type Assert Function
 export const isAxiosError: (error: unknown) => error is AxiosError = error => {
   if (typeof error !== 'object') return false
   if (error === null) return false
 
-  // @ts-expect-error
+  // @ts-expect-error Untyped Property
   return error.isAxiosError === true
 }
