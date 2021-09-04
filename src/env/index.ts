@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
 import process from 'node:process'
-import { registerInt, registerString } from './register.js'
+import { registerBool, registerInt, registerString } from './register.js'
 
 // #region Globals
 const NODE_ENV = registerString('NODE_ENV')
 const IS_PROD = NODE_ENV?.toLowerCase() === 'production'
 export const IS_DEV = !IS_PROD
+
+export const DEBUG_LOGS = registerBool('DEBUG_LOGS') ?? false
 // #endregion
 
 // #region Application

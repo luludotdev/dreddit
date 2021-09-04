@@ -6,13 +6,13 @@ import {
   field,
 } from '@lolpants/jogger'
 import type { IField } from '@lolpants/jogger'
-import { IS_DEV } from '~env/index.js'
+import { DEBUG_LOGS, IS_DEV } from '~env/index.js'
 
-const consoleSink = createConsoleSink(IS_DEV)
+const consoleSink = createConsoleSink(DEBUG_LOGS || IS_DEV)
 const fileSink = createFileSink({
   name: 'dreddit',
   directory: 'logs',
-  debug: IS_DEV,
+  debug: DEBUG_LOGS || IS_DEV,
 })
 
 export const logger = createLogger({
