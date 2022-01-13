@@ -10,13 +10,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: 16.x
           registry-url: https://registry.npmjs.org
           cache: yarn
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
       - name: Lint Project
         run: yarn run lint
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -63,7 +64,9 @@ jobs:
         with:
           context: .
           push: ${{ (github.ref == 'refs/heads/master') || (contains(github.ref, 'refs/tags/') == true) }}
-          tags: ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
+          tags: |
+            ${{ steps.prepare.outputs.docker_image }}:latest
+            ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }}
           build-args: GIT_REPO=${{ steps.prepare.outputs.git_repo }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new

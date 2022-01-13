@@ -25,6 +25,12 @@ build/Release
 
 # Dependency directory
 node_modules
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # Optional npm cache directory
 .npm
@@ -40,7 +46,7 @@ build/
 
 # Config
 *.env
-config.json
+config/config.json
 
 # Docker Redis DB
 db/
