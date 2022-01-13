@@ -16,7 +16,7 @@ jobs:
       - name: Install packages
         run: yarn install --immutable
       - name: Lint Project
-        run: yarn run lint
+        run: yarn run test
 
   build:
     needs: test
