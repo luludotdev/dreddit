@@ -1,6 +1,6 @@
 import { redditAxios as axios } from '~utils/axios.js'
 import { escapePings } from '~utils/pings.js'
-import type { PartialPost, Response, SortLevel } from './types.js'
+import { type PartialPost, type Response, type SortLevel } from './types.js'
 
 export const validateSubreddit = async (subreddit: string) => {
   try {

@@ -1,6 +1,6 @@
 import { fetchPosts } from './fetchers.js'
 import { parseAll } from './parsers.js'
-import type { Post, SortLevel } from './types.js'
+import { type Post, type SortLevel } from './types.js'
 
 export const getPosts: (
   subreddit: string,

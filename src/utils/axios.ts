@@ -19,7 +19,6 @@ export const redditAxios = Axios.create({
 
 export const imgurAxios = Axios.create({
   baseURL: 'https://api.imgur.com/3/',
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   headers: {
     ...common.headers,
     Authorization: `Client-ID ${IMGUR_CLID}`,

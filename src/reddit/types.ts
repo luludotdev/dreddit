@@ -1,4 +1,4 @@
-import type { Except } from 'type-fest'
+import { type Except } from 'type-fest'
 
 export type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
 export type PostType = 'text' | 'embed'
@@ -15,6 +15,7 @@ export interface Post {
 
 export type PartialPost = Except<Post, 'type'>
 
+/* eslint-disable @typescript-eslint/ban-types */
 export interface Response {
   kind: 'Listing'
 
@@ -38,3 +39,4 @@ export interface Response {
     before: string | null
   }
 }
+/* eslint-enable @typescript-eslint/ban-types */

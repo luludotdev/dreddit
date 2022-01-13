@@ -3,7 +3,7 @@ import { parse } from 'node:path'
 import { URL } from 'node:url'
 import { mapAsync } from '~utils/arrays.js'
 import { redditAxios as axios, imgurAxios, isAxiosError } from '~utils/axios.js'
-import type { PartialPost, Post } from './types.js'
+import { type PartialPost, type Post } from './types.js'
 
 // #region Parsers
 type ParserFunction = (
@@ -44,6 +44,7 @@ const parseImgurs: ParserFunction = async post => {
     interface ImgurResponse {
       data: {
         id: string
+        // eslint-disable-next-line @typescript-eslint/ban-types
         title: string | null
         link: string
         mp4?: string
@@ -121,7 +122,7 @@ const checkSizes: (
         return
       }
 
-      throw error
+      throw error as Error
     }
   })
 
