@@ -106,7 +106,7 @@ export const createManager: (
   const intervalId = setInterval(async () => loop(), 1000 * interval)
 
   return {
-    cleanup: () => {
+    cleanup() {
       logger.info(
         ctx,
         subredditField,
