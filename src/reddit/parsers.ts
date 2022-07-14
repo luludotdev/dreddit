@@ -37,7 +37,12 @@ export const parseSimple: ParserFunction = async post => {
   const isValid = VALID_EXTS.has(ext)
   if (isValid === false) return undefined
 
-  return { ...post, type: 'embed', url: `${protocol}//${host}${pathname}` }
+  const gifvFixedPathname = pathname.replace('.gifv', '.mp4')
+  return {
+    ...post,
+    type: 'embed',
+    url: `${protocol}//${host}${gifvFixedPathname}`,
+  }
 }
 
 const parseImgurs: ParserFunction = async post => {
