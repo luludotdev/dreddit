@@ -33,7 +33,7 @@
     "xo": "^0.50.0"
   },
   "dependencies": {
-    "@lolpants/env": "^0.5.2",
+    "@lolpants/env": "^0.5.3",
     "@lolpants/exit": "^0.1.0",
     "@lolpants/jogger": "^0.6.0",
     "ajv": "^8.11.0",

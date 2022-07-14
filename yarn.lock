@@ -101,12 +101,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lolpants/env@npm:^0.5.2":
-  version: 0.5.2
-  resolution: "@lolpants/env@npm:0.5.2"
+"@lolpants/env@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "@lolpants/env@npm:0.5.3"
   dependencies:
     dotenv-cra: ^3.0.2
-  checksum: 043640e5e96afc532f38add02c4aad3ce8b7743e96d7d84172b73477c36986dd9866fb87e2194cf76debfd4e6e9e0b0fc83f79c9cde2bd2b2d0ff71f2010c0d0
+  checksum: 0cdc0f2f79a02123b8f49278c57ae894ea671371928f01c9ee8616737b9546afa8795e60ea0af81aa73384a081ce69ae365342f967ba7253198dc6d3f463cab2
   languageName: node
   linkType: hard
 
@@ -1252,7 +1252,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dreddit@workspace:."
   dependencies:
-    "@lolpants/env": ^0.5.2
+    "@lolpants/env": ^0.5.3
     "@lolpants/exit": ^0.1.0
     "@lolpants/jogger": ^0.6.0
     "@types/cheerio": ^0.22.31
