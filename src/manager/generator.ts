@@ -1,5 +1,5 @@
-import { getPosts, type Post, type SortLevel } from '~reddit/index.js'
-import { redis } from '~redis/index.js'
+import { getPosts, type Post, type SortLevel } from '~/reddit/index.js'
+import { redis } from '~/redis/index.js'
 
 /* eslint-disable no-await-in-loop */
 export async function* generatePosts(

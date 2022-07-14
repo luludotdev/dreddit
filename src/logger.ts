@@ -6,7 +6,7 @@ import {
   field,
   type Field,
 } from '@lolpants/jogger'
-import { env, IS_DEV } from '~env.js'
+import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink(env.DEBUG_LOGS || IS_DEV)
 const fileSink = createFileSink({

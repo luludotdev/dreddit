@@ -2,10 +2,10 @@ import 'source-map-support/register.js'
 
 import { createField, field } from '@lolpants/jogger'
 import process from 'node:process'
-import { config } from '~config/index.js'
-import { ctxField, errorField, flush, logger } from '~logger/index.js'
-import { createManager } from '~manager/index.js'
-import { mapAsync } from '~utils/arrays.js'
+import { config } from '~/config/index.js'
+import { ctxField, errorField, flush, logger } from '~/logger.js'
+import { createManager } from '~/manager/index.js'
+import { mapAsync } from '~/utils/arrays.js'
 import { exitHook } from './exitHook.js'
 
 const ctx = ctxField('main')

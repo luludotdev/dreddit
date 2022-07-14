@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { readPackageUpSync as readPkg } from 'read-pkg-up'
-import { env } from '~env.js'
+import { env } from '~/env.js'
 
 const pkg = readPkg()
 const name = pkg?.packageJson.name ?? 'dreddit'

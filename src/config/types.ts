@@ -1,4 +1,4 @@
-import { type SortLevel } from '~reddit/index.js'
+import { type SortLevel } from '~/reddit/index.js'
 
 export interface Config {
   interval: number

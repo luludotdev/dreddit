@@ -2,8 +2,8 @@ import { createField, field } from '@lolpants/jogger'
 import Redis from 'ioredis'
 import cron from 'node-cron'
 import process from 'node:process'
-import { env, IS_DEV } from '~env.js'
-import { ctxField, errorField, logger } from '~logger/index.js'
+import { env, IS_DEV } from '~/env.js'
+import { ctxField, errorField, logger } from '~/logger.js'
 
 const ctx = ctxField('redis')
 const event = createField('event')

@@ -2,7 +2,7 @@ import { field } from '@lolpants/jogger'
 import Ajv from 'ajv'
 import { PathLike, readFileSync } from 'node:fs'
 import process from 'node:process'
-import { ctxField, logger } from '~logger/index.js'
+import { ctxField, logger } from '~/logger.js'
 
 const ctx = ctxField('config')
 

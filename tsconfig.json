@@ -1,31 +1,23 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es2017",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "es2020",
-    "moduleResolution": "node",
-    "removeComments": true,
-    "downlevelIteration": true,
-    "outDir": "./build",
-    "rootDir": "./src",
+    "target": "esnext",
+    "module": "esnext",
+    "noImplicitAny": true,
     "sourceMap": true,
+    "strict": true,
+    "rootDir": "./src",
+    "outDir": "./build",
     "importHelpers": true,
-    "baseUrl": "./src",
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "paths": {
-      "~config/*": ["config/*"],
-      "~env.js": ["env.js"],
-      "~manager/*": ["manager/*"],
-      "~reddit/*": ["reddit/*"],
-      "~redis/*": ["redis/*"],
-      "~utils/*": ["utils/*"],
-      "~logger/*": ["logger.js"]
+      "~/*": ["./src/*"]
     },
-    "plugins": [{ "transform": "typescript-transform-paths" }]
+    "plugins": [
+      { "transform": "typescript-transform-paths" }
+    ]
   },
   "include": [
     "src/**/*.ts"

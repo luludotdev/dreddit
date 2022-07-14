@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { ctxField, logger } from '~logger/index.js'
+import { ctxField, logger } from '~/logger.js'
 import { type Config } from './types.js'
 import { validateConfig } from './validate.js'
 

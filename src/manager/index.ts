@@ -1,10 +1,10 @@
 import { field } from '@lolpants/jogger'
 import { WebhookClient } from 'discord.js'
-import { config, type PostConfig } from '~config/index.js'
-import { ctxField, errorField, logger } from '~logger/index.js'
-import { validateSubreddit } from '~reddit/index.js'
-import { redis } from '~redis/index.js'
-import { resolveArray } from '~utils/arrays.js'
+import { config, type PostConfig } from '~/config/index.js'
+import { ctxField, errorField, logger } from '~/logger.js'
+import { validateSubreddit } from '~/reddit/index.js'
+import { redis } from '~/redis/index.js'
+import { resolveArray } from '~/utils/arrays.js'
 import { generatePosts } from './generator.js'
 
 const ctx = ctxField('manager')
