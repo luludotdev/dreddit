@@ -33,12 +33,12 @@
     "xo": "^0.50.0"
   },
   "dependencies": {
+    "@lolpants/env": "^0.5.2",
     "@lolpants/jogger": "^0.6.0",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",
     "cheerio": "1.0.0-rc.12",
     "discord.js": "^13.8.1",
-    "dotenv": "^16.0.1",
     "ioredis": "^5.2.0",
     "node-cron": "^3.0.1",
     "read-pkg-up": "^9.1.0",
