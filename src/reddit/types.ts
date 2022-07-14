@@ -1,6 +1,7 @@
 import { type Except } from 'type-fest'
+import { type SubredditConfig } from '~/config/index.js'
 
-export type SortLevel = 'hot' | 'new' | 'rising' | 'controversial' | 'top'
+export type SortLevel = Exclude<SubredditConfig['level'], undefined>
 export type PostType = 'text' | 'embed'
 
 export interface Post {

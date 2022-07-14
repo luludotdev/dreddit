@@ -1,6 +1,7 @@
 import { field } from '@lolpants/jogger'
 import { WebhookClient } from 'discord.js'
-import { config, type PostConfig } from '~/config/index.js'
+import { config, type SubredditConfig } from '~/config/index.js'
+import { MIN_INTERVAL } from '~/config/schema.js'
 import { ctxField, errorField, logger } from '~/logger.js'
 import { validateSubreddit } from '~/reddit/index.js'
 import { redis } from '~/redis/index.js'
@@ -14,11 +15,14 @@ interface Manager {
 }
 
 export const createManager: (
-  post: PostConfig
+  post: SubredditConfig
 ) => Promise<Manager | undefined> = async postConfig => {
   const { subreddit } = postConfig
   const level = postConfig.level ?? 'hot'
-  const interval = Math.max(10, postConfig.interval ?? config.interval)
+  const interval = Math.max(
+    MIN_INTERVAL,
+    postConfig.interval ?? config.interval
+  )
 
   const subredditField = field('subreddit', `/r/${subreddit}`)
 
