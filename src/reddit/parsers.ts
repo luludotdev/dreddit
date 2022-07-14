@@ -1,4 +1,4 @@
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
 import { mapAsync } from '~/utils/arrays.js'
