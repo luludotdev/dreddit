@@ -9,7 +9,7 @@ import { ConfigSchema } from './schema.js'
 const ctx = ctxField('config')
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const configDir = join(__dirname, '..', '..', 'config')
+export const configDir = join(__dirname, '..', '..', 'config')
 const configPath = join(configDir, 'config.json')
 
 if (existsSync(configPath) === false) {
@@ -21,4 +21,5 @@ if (existsSync(configPath) === false) {
 const configBody = JSON.parse(readFileSync(configPath, 'utf8'))
 export const config = ConfigSchema.parse(configBody)
 
+export { jsonSchema } from './schema.js'
 export type { Config, SubredditConfig } from './schema.js'

@@ -1,69 +1,72 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "IPostConfig": {
-      "properties": {
-        "allowNSFW": {
-          "type": "boolean"
-        },
-        "interval": {
-          "type": "number"
-        },
-        "level": {
-          "enum": [
-            "controversial",
-            "hot",
-            "new",
-            "rising",
-            "top"
-          ],
-          "type": "string"
-        },
-        "subreddit": {
-          "type": "string"
-        },
-        "titles": {
-          "type": "boolean"
-        },
-        "urls": {
-          "type": "boolean"
-        },
-        "webhooks": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "string"
-            }
-          ]
-        }
-      },
-      "type": "object",
-      "required": [
-        "subreddit",
-        "webhooks"
-      ]
-    }
-  },
+  "type": "object",
   "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
     "interval": {
-      "type": "number"
+      "type": "number",
+      "minimum": 10
     },
     "subreddits": {
+      "type": "array",
       "items": {
-        "$ref": "#/definitions/IPostConfig"
-      },
-      "type": "array"
+        "type": "object",
+        "properties": {
+          "subreddit": {
+            "type": "string",
+            "minLength": 0
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "hot",
+              "new",
+              "rising",
+              "controversial",
+              "top"
+            ]
+          },
+          "webhooks": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "interval": {
+            "type": "number",
+            "minimum": 10
+          },
+          "allowNSFW": {
+            "type": "boolean"
+          },
+          "titles": {
+            "type": "boolean"
+          },
+          "urls": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "subreddit",
+          "webhooks"
+        ],
+        "additionalProperties": false
+      }
     }
   },
-  "type": "object",
-  "title": "root",
   "required": [
     "interval",
     "subreddits"
-  ]
+  ],
+  "additionalProperties": false
 }

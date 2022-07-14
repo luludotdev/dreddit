@@ -1,7 +1,9 @@
 import { exitHook } from '@lolpants/exit'
 import { createField, field } from '@lolpants/jogger'
-import process from 'node:process'
-import { config } from '~/config/index.js'
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import process, { argv } from 'node:process'
+import { config, configDir, jsonSchema } from '~/config/index.js'
 import { ctxField, logger } from '~/logger.js'
 import { createManager } from '~/manager/index.js'
 import { mapAsync } from '~/utils/arrays.js'
@@ -10,8 +12,15 @@ const ctx = ctxField('main')
 const action = createField('action')
 
 export const init = async () => {
-  logger.info(ctx, action('init'))
+  if (argv[2]?.toLowerCase() === 'schemagen') {
+    const schemaPath = join(configDir, 'config.schema.json')
+    const schema = JSON.stringify(jsonSchema, null, 2) + '\n'
 
+    await writeFile(schemaPath, schema)
+    process.exit(0)
+  }
+
+  logger.info(ctx, action('init'))
   const managers = await Promise.all(
     config.subreddits.map(async post => createManager(post))
   )

@@ -20,7 +20,8 @@
     "prebuild": "yarn run clean",
     "build": "yarn run compile",
     "dev": "yarn run build --watch",
-    "debug": "nodemon --inspect"
+    "debug": "nodemon --inspect",
+    "schemagen": "yarn run build && node . schemagen"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.31",
