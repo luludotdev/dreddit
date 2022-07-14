@@ -4,9 +4,11 @@ import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import process, { argv } from 'node:process'
 import { config, configDir, jsonSchema } from '~/config/index.js'
+import { IS_DEV } from '~/env.js'
 import { ctxField, logger } from '~/logger.js'
 import { createManager } from '~/manager/index.js'
 import { mapAsync } from '~/utils/arrays.js'
+import { getVersion } from '~/version.js'
 
 const ctx = ctxField('main')
 const action = createField('action')
@@ -20,7 +22,14 @@ export const init = async () => {
     process.exit(0)
   }
 
-  logger.info(ctx, action('init'))
+  const version = await getVersion()
+  logger.info(
+    ctx,
+    action('init'),
+    field('version', version),
+    field('environment', IS_DEV ? 'dev' : 'prod')
+  )
+
   const managers = await Promise.all(
     config.subreddits.map(async post => createManager(post))
   )
