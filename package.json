@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@lolpants/env": "^0.5.2",
+    "@lolpants/exit": "^0.1.0",
     "@lolpants/jogger": "^0.6.0",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",

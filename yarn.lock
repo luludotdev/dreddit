@@ -110,6 +110,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lolpants/exit@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@lolpants/exit@npm:0.1.0"
+  checksum: bb3699b411082b67930b48f870d4b4c6725f677291cdcd1f56e98752580f8f4cbe7919d024ce152f370cf1bf0a8915d6bc37f40b1219f6320e3c594613a60838
+  languageName: node
+  linkType: hard
+
 "@lolpants/jogger@npm:^0.6.0":
   version: 0.6.0
   resolution: "@lolpants/jogger@npm:0.6.0"
@@ -1246,6 +1253,7 @@ __metadata:
   resolution: "dreddit@workspace:."
   dependencies:
     "@lolpants/env": ^0.5.2
+    "@lolpants/exit": ^0.1.0
     "@lolpants/jogger": ^0.6.0
     "@types/cheerio": ^0.22.31
     "@types/node-cron": ^3.0.2
