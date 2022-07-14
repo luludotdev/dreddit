@@ -18,7 +18,7 @@ export const createManager: (
 ) => Promise<Manager | undefined> = async postConfig => {
   const { subreddit } = postConfig
   const level = postConfig.level ?? 'hot'
-  const interval = Math.max(30, postConfig.interval ?? config.interval)
+  const interval = Math.max(10, postConfig.interval ?? config.interval)
 
   const subredditField = field('subreddit', `/r/${subreddit}`)
 
@@ -29,6 +29,7 @@ export const createManager: (
       subredditField,
       field('message', `/r/${subreddit} could not be reached!`)
     )
+
     return
   }
 
