@@ -18,7 +18,7 @@
     "baseUrl": "./src",
     "paths": {
       "~config/*": ["config/*"],
-      "~env/*": ["env/*"],
+      "~env.js": ["env.js"],
       "~manager/*": ["manager/*"],
       "~reddit/*": ["reddit/*"],
       "~redis/*": ["redis/*"],

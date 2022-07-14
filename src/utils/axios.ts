@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { readPackageUpSync as readPkg } from 'read-pkg-up'
-import { IMGUR_CLID } from '~env/index.js'
+import { env } from '~env.js'
 
 const pkg = readPkg()
 const name = pkg?.packageJson.name ?? 'dreddit'
@@ -21,7 +21,7 @@ export const imgurAxios = Axios.create({
   baseURL: 'https://api.imgur.com/3/',
   headers: {
     ...common.headers,
-    Authorization: `Client-ID ${IMGUR_CLID}`,
+    Authorization: `Client-ID ${env.IMGUR_CLID}`,
   },
 })
 

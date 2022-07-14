@@ -2,22 +2,17 @@ import { createField, field } from '@lolpants/jogger'
 import Redis from 'ioredis'
 import cron from 'node-cron'
 import process from 'node:process'
-import {
-  REDIS_DB_OFFSET,
-  REDIS_HOST,
-  REDIS_PASS,
-  REDIS_PORT,
-} from '~env/index.js'
+import { env, IS_DEV } from '~env.js'
 import { ctxField, errorField, logger } from '~logger/index.js'
 
 const ctx = ctxField('redis')
 const event = createField('event')
 
 export const redis = new Redis({
-  db: REDIS_DB_OFFSET + 0,
-  host: REDIS_HOST,
-  password: REDIS_PASS,
-  port: REDIS_PORT,
+  db: env.REDIS_DB_OFFSET + 0,
+  host: env.REDIS_HOST ?? (IS_DEV ? 'localhost' : 'redis'),
+  password: env.REDIS_PASS,
+  port: env.REDIS_PORT,
 })
 
 redis.on('error', error => {
