@@ -3,6 +3,7 @@ import { defineEnvironment, t } from '@lolpants/env'
 
 export const env = defineEnvironment({
   NODE_ENV: t.string(),
+  GIT_VERSION: t.string(),
 
   // #region Application
   DEBUG_LOGS: t.bool().default(false),
