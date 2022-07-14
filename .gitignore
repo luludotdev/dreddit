@@ -45,8 +45,8 @@ node_modules
 build/
 
 # Config
-*.env
-!.env.example
+.env.local
+.env.development
 config.json
 
 # Docker Redis DB
