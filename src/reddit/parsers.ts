@@ -1,6 +1,8 @@
+import { field } from '@lolpants/jogger'
 import * as cheerio from 'cheerio'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
+import { ctxField, logger } from '~/logger.js'
 import { mapAsync } from '~/utils/arrays.js'
 import {
   redditAxios as axios,
@@ -118,8 +120,14 @@ const checkSizes: (
       if (lengthString === undefined) return post
       if (lengthString === '') return post
 
-      // Discord Limit for Bots
       const length = Number.parseInt(lengthString, 10)
+      logger.debug(
+        ctxField('size'),
+        field('id', post.id),
+        field('size', length)
+      )
+
+      // Discord Limit for Bots
       if (length <= 8_388_119) return post
 
       return { ...post, type: 'text' }
