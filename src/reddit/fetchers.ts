@@ -25,7 +25,7 @@ export const fetchPosts: (
     action('fetch'),
     status('preflight'),
     field('subreddit', `/r/${subreddit}`),
-    field('level', level)
+    field('sort', level)
   )
 
   const resp = await axios.get<Response>(
@@ -47,7 +47,7 @@ export const fetchPosts: (
     action('fetch'),
     status('complete'),
     field('subreddit', `/r/${subreddit}`),
-    field('level', level),
+    field('sort', level),
     field('results', posts.length)
   )
 
