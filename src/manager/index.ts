@@ -50,8 +50,24 @@ export const createManager: (
     const { value: post } = await generator.next()
     if (post === undefined) return
 
+    logger.debug(
+      ctx,
+      subredditField,
+      field('action', 'pop'),
+      field('id', post.id),
+      field('url', post.url)
+    )
+
     const markSeen = async () => {
       await redis.sadd(subreddit, post.id)
+
+      logger.debug(
+        ctx,
+        subredditField,
+        field('action', 'mark-seen'),
+        field('id', post.id),
+        field('url', post.url)
+      )
     }
 
     if (post.nsfw && allowNSFW === false) return markSeen()
@@ -67,16 +83,17 @@ export const createManager: (
       else files.push(post.url)
 
       const message = lines.join('\n')
-      await sendPost(message, ...files)
-      await markSeen()
 
-      logger.debug(
+      await sendPost(message, ...files)
+      logger.info(
         ctx,
         subredditField,
         field('action', 'post'),
         field('id', post.id),
         field('url', post.url)
       )
+
+      await markSeen()
     } catch (error: unknown) {
       logger.warn(
         ctx,
