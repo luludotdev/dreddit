@@ -112,7 +112,7 @@ export const createManager: (
 
   const sendPost = async (text: string, ...files: string[]) => {
     const tasks = webhooks.map(async hook =>
-      hook.send({ content: text, files })
+      hook.send({ content: text, files, allowedMentions: { parse: [] } })
     )
 
     return Promise.all(tasks)
