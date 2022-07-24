@@ -12,6 +12,8 @@ export interface Post {
   type: PostType
   url: string
   nsfw: boolean
+
+  size?: number
 }
 
 export type PartialPost = Except<Post, 'type'>

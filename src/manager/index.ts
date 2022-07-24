@@ -90,7 +90,8 @@ export const createManager: (
         subredditField,
         field('action', 'post'),
         field('id', post.id),
-        field('url', post.url)
+        field('url', post.url),
+        field('size', post.size ?? -1)
       )
 
       await markSeen()
