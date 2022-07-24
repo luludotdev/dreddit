@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.3
+# syntax=docker/dockerfile:1.4
 FROM node:16-alpine as base
 FROM base AS deps
 
@@ -49,7 +49,10 @@ USER nodejs
 VOLUME ["/app/config"]
 VOLUME ["/app/logs"]
 
+ARG GIT_VERSION
 ARG GIT_REPO
+
+ENV GIT_VERSION=${GIT_VERSION}
 LABEL org.opencontainers.image.source=${GIT_REPO}
 
 ENTRYPOINT ["/sbin/tini", "--"]
