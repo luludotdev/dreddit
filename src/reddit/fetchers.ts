@@ -20,7 +20,7 @@ export const fetchPosts: (
   subreddit: string,
   level?: SortLevel
 ) => Promise<readonly PartialPost[]> = async (subreddit, level = 'hot') => {
-  logger.debug(
+  logger.trace(
     ctx,
     action('fetch'),
     status('preflight'),
@@ -42,7 +42,7 @@ export const fetchPosts: (
       url,
     }))
 
-  logger.debug(
+  logger.trace(
     ctx,
     action('fetch'),
     status('complete'),

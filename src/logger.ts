@@ -8,7 +8,10 @@ import {
 } from '@lolpants/jogger'
 import { env, IS_DEV } from '~/env.js'
 
-const consoleSink = createConsoleSink(env.DEBUG_LOGS || IS_DEV)
+const consoleSink = createConsoleSink({
+  debug: env.DEBUG_LOGS || IS_DEV,
+})
+
 const fileSink = createFileSink({
   name: 'dreddit',
   directory: 'logs',

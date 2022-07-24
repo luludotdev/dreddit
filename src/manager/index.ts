@@ -50,7 +50,7 @@ export const createManager: (
     const { value: post } = await generator.next()
     if (post === undefined) return
 
-    logger.debug(
+    logger.trace(
       ctx,
       subredditField,
       field('action', 'pop'),
@@ -61,7 +61,7 @@ export const createManager: (
     const markSeen = async () => {
       await redis.sadd(subreddit, post.id)
 
-      logger.debug(
+      logger.trace(
         ctx,
         subredditField,
         field('action', 'mark-seen'),
