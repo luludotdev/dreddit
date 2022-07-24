@@ -10,12 +10,14 @@ import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink({
   debug: env.DEBUG_LOGS || IS_DEV,
+  trace: env.TRACE_LOGS,
 })
 
 const fileSink = createFileSink({
   name: 'dreddit',
   directory: 'logs',
   debug: env.DEBUG_LOGS || IS_DEV,
+  trace: env.TRACE_LOGS,
   rollEveryDay: true,
 })
 

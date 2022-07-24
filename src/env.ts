@@ -7,6 +7,7 @@ export const env = defineEnvironment({
 
   // #region Application
   DEBUG_LOGS: t.bool().default(false),
+  TRACE_LOGS: t.bool().default(false),
   IMGUR_CLID: t.string().required(),
   // #endregion
 
