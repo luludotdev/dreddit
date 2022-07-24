@@ -13,6 +13,7 @@ const fileSink = createFileSink({
   name: 'dreddit',
   directory: 'logs',
   debug: env.DEBUG_LOGS || IS_DEV,
+  rollEveryDay: true,
 })
 
 export const logger = createLogger({
