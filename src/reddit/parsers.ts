@@ -119,11 +119,12 @@ const checkSizes: (
       if (lengthString === '') return post
 
       const length = Number.parseInt(lengthString, 10)
+      post.size = length
 
       // Discord Limit for Bots
       if (length <= 8_388_119) return post
 
-      return { ...post, type: 'text', size: length }
+      return { ...post, type: 'text' }
     } catch (error: unknown) {
       if (isAxiosError(error)) {
         const resp = error.response
