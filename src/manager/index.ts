@@ -1,6 +1,7 @@
 import { clearInterval, setInterval } from 'node:timers'
-import { field } from '@lolpants/jogger'
+import { createField, field } from '@lolpants/jogger'
 import { WebhookClient } from 'discord.js'
+import ms from 'ms'
 import { generatePosts } from './generator.js'
 import { config, type SubredditConfig } from '~/config/index.js'
 import { MIN_INTERVAL } from '~/config/schema.js'
@@ -10,6 +11,7 @@ import { redis } from '~/redis/index.js'
 import { resolveArray } from '~/utils/arrays.js'
 
 const ctx = ctxField('manager')
+const action = createField('action')
 
 interface Manager {
   cleanup(): Promise<void> | void
@@ -62,21 +64,34 @@ export const createManager: (
     logger.trace(
       ctx,
       subredditField,
-      field('action', 'pop'),
+      action('pop'),
       field('id', post.id),
       field('url', post.url),
     )
 
-    const markSeen = async () => {
-      await redis.sadd(subreddit, post.id)
+    const unstage = async () => {
+      await redis.srem(`staging:${subreddit}`, post.id)
 
       logger.trace(
         ctx,
         subredditField,
-        field('action', 'mark-seen'),
+        action('unstage'),
         field('id', post.id),
         field('url', post.url),
       )
+    }
+
+    const markSeen = async () => {
+      await redis.sadd(subreddit, post.id)
+      logger.trace(
+        ctx,
+        subredditField,
+        action('mark-seen'),
+        field('id', post.id),
+        field('url', post.url),
+      )
+
+      await unstage()
     }
 
     if (post.nsfw && allowNSFW === false) return markSeen()
@@ -97,7 +112,7 @@ export const createManager: (
       logger.info(
         ctx,
         subredditField,
-        field('action', 'post'),
+        action('post'),
         field('id', post.id),
         field('url', post.url),
         field('size', post.size ?? -1),
@@ -117,16 +132,18 @@ export const createManager: (
       if (error instanceof Error) {
         logger.warn(ctx, subredditField, errorField(error))
       }
+
+      await unstage()
     }
   }
 
-  const sendPost = async (text: string, ...files: string[]) => {
-    const tasks = webhooks.map(async hook =>
-      hook.send({ content: text, files, allowedMentions: { parse: [] } })
-    )
-
-    return Promise.all(tasks)
+  const clearStaged = async () => {
+    await redis.del(`staging:${subreddit}`)
+    logger.trace(ctx, subredditField, field('action', 'clear-staged'))
   }
+
+  await clearStaged()
+  const clearStagedInterval = setInterval(async () => clearStaged(), ms('1h'))
 
   logger.info(
     ctx,
@@ -138,7 +155,7 @@ export const createManager: (
   )
 
   void loop()
-  const intervalId = setInterval(async () => loop(), 1_000 * interval)
+  const loopInterval = setInterval(async () => loop(), 1_000 * interval)
 
   return {
     cleanup() {
@@ -148,7 +165,8 @@ export const createManager: (
         field('message', `Stopping posts from /r/${subreddit}/${level}`),
       )
 
-      clearInterval(intervalId)
+      clearInterval(clearStagedInterval)
+      clearInterval(loopInterval)
     },
   }
 }
