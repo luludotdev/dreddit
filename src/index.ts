@@ -2,8 +2,8 @@ import 'source-map-support/register.js'
 
 import { exitHook } from '@lolpants/exit'
 import { createField } from '@lolpants/jogger'
+import { env } from '~/env.js'
 import { ctxField, errorField, flush, logger } from '~/logger.js'
-import { env } from './env.js'
 
 const ctx = ctxField('main')
 const action = createField('action')

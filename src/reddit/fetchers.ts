@@ -1,7 +1,7 @@
 import { createField, field } from '@lolpants/jogger'
+import type { PartialPost, Response, SortLevel } from './types.js'
 import { ctxField, logger } from '~/logger.js'
 import { redditAxios as axios } from '~/utils/axios.js'
-import { type PartialPost, type Response, type SortLevel } from './types.js'
 
 const ctx = ctxField('reddit')
 const action = createField('action')
@@ -18,18 +18,18 @@ export const validateSubreddit = async (subreddit: string) => {
 
 export const fetchPosts: (
   subreddit: string,
-  level?: SortLevel
+  level?: SortLevel,
 ) => Promise<readonly PartialPost[]> = async (subreddit, level = 'hot') => {
   logger.trace(
     ctx,
     action('fetch'),
     status('preflight'),
     field('subreddit', `/r/${subreddit}`),
-    field('sort', level)
+    field('sort', level),
   )
 
   const resp = await axios.get<Response>(
-    `/r/${subreddit}/${level}.json?limit=100`
+    `/r/${subreddit}/${level}.json?limit=100`,
   )
 
   const posts: PartialPost[] = resp.data.data.children
@@ -48,7 +48,7 @@ export const fetchPosts: (
     status('complete'),
     field('subreddit', `/r/${subreddit}`),
     field('sort', level),
-    field('results', posts.length)
+    field('results', posts.length),
   )
 
   return posts

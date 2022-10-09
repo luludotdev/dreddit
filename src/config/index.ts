@@ -1,10 +1,10 @@
-import { field } from '@lolpants/jogger'
 import { existsSync, readFileSync } from 'node:fs'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { ctxField, logger } from '~/logger.js'
+import { field } from '@lolpants/jogger'
 import { ConfigSchema } from './schema.js'
+import { ctxField, logger } from '~/logger.js'
 
 const ctx = ctxField('config')
 
@@ -17,7 +17,6 @@ if (existsSync(configPath) === false) {
   process.exit(1)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const configBody = JSON.parse(readFileSync(configPath, 'utf8'))
 export const config = ConfigSchema.parse(configBody)
 

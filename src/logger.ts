@@ -27,16 +27,14 @@ export const logger = createLogger({
 })
 
 export const ctxField = createField('context')
-export const errorField: <T extends Error>(
-  error: T
-) => Readonly<Field> = error => {
-  const array: Array<Readonly<Field>> = [
+export const errorField: <T extends Error>(error: T) => Field = error => {
+  const fields: [Field, ...Field[]] = [
     field('type', error.name),
     field('message', error.message),
   ]
 
-  if (error.stack) array.push(field('stack', error.stack))
-  return field('error', array[0], ...array.slice(1))
+  if (error.stack) fields.push(field('stack', error.stack))
+  return field('error', ...fields)
 }
 
 export const flush = async () => fileSink.flush()

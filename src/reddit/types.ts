@@ -1,8 +1,8 @@
-import { type Except } from 'type-fest'
-import { type SubredditConfig } from '~/config/index.js'
+import type { Except } from 'type-fest'
+import type { SubredditConfig } from '~/config/index.js'
 
 export type SortLevel = Exclude<SubredditConfig['level'], undefined>
-export type PostType = 'text' | 'embed'
+export type PostType = 'embed' | 'text'
 
 export interface Post {
   id: string
@@ -18,7 +18,6 @@ export interface Post {
 
 export type PartialPost = Except<Post, 'type'>
 
-/* eslint-disable @typescript-eslint/ban-types */
 export interface Response {
   kind: 'Listing'
 
@@ -26,7 +25,7 @@ export interface Response {
     modhash: string
     dist: number
 
-    children: Array<{
+    children: {
       kind: 't3'
       data: {
         subreddit: string
@@ -36,10 +35,9 @@ export interface Response {
         permalink: string
         over_18: boolean
       }
-    }>
+    }[]
 
     after: string | null
     before: string | null
   }
 }
-/* eslint-enable @typescript-eslint/ban-types */

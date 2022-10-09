@@ -1,22 +1,23 @@
-import * as cheerio from 'cheerio'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
+import * as cheerio from 'cheerio'
+import type { PartialPost, Post } from './types.js'
+import { errorField, logger } from '~/logger.js'
 import { mapAsync } from '~/utils/arrays.js'
 import {
   redditAxios as axios,
   imgurAxios,
   isAxiosError,
 } from '~/utils/axios.js'
-import { type PartialPost, type Post } from './types.js'
 
 // #region Parsers
 type ParserFunction = (
-  post: PartialPost
-) => Post | undefined | Promise<Post | undefined>
+  post: PartialPost,
+) => Post | Promise<Post | undefined> | undefined
 
-const IMGUR_RX = /https?:\/\/imgur\.com\/([a-z\d]{5,})/i
-const GFY_RX = /https?:\/\/gfycat\.com\/(.+)/i
-const REDGIFS_RX = /https?:\/\/(?:www\.)?redgifs\.com\/watch\/(.+)/i
+const IMGUR_RX = /https?:\/\/imgur\.com\/(?<id>[\da-z]{5,})/i
+const GFY_RX = /https?:\/\/gfycat\.com\/(?<id>.+)/i
+const REDGIFS_RX = /https?:\/\/(?:www\.)?redgifs\.com\/watch\/(?<id>.+)/i
 const VALID_EXTS = new Set([
   '.png',
   '.gif',
@@ -28,44 +29,58 @@ const VALID_EXTS = new Set([
 ])
 
 export const parseSimple: ParserFunction = async post => {
-  const { pathname, protocol, host } = new URL(post.url)
-  if (pathname === null) return undefined
-  if (protocol === null) return undefined
-  if (host === null) return undefined
+  try {
+    const { pathname, protocol, host } = new URL(post.url)
+    if (pathname === null) return undefined
+    if (protocol === null) return undefined
+    if (host === null) return undefined
 
-  const { ext } = parse(pathname)
-  const isValid = VALID_EXTS.has(ext)
-  if (isValid === false) return undefined
+    const { ext } = parse(pathname)
+    const isValid = VALID_EXTS.has(ext)
+    if (isValid === false) return undefined
 
-  const gifvFixedPathname = pathname.replace('.gifv', '.mp4')
-  return {
-    ...post,
-    type: 'embed',
-    url: `${protocol}//${host}${gifvFixedPathname}`,
+    const gifvFixedPathname = pathname.replace('.gifv', '.mp4')
+    return {
+      ...post,
+      type: 'embed',
+      url: `${protocol}//${host}${gifvFixedPathname}`,
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(errorField(error))
+    }
+
+    return undefined
   }
 }
 
 const parseImgurs: ParserFunction = async post => {
   const matches = IMGUR_RX.exec(post.url)
-  if (matches === null) return undefined
+
+  const { id } = matches?.groups ?? {}
+  if (!id) return undefined
 
   try {
     interface ImgurResponse {
       data: {
         id: string
-        // eslint-disable-next-line @typescript-eslint/ban-types
+
         title: string | null
         link: string
         mp4?: string
       }
     }
 
-    const resp = await imgurAxios.get<ImgurResponse>(`/image/${matches[1]}`)
+    const resp = await imgurAxios.get<ImgurResponse>(`/image/${id}`)
     const url = resp.data?.data?.mp4 ?? resp.data?.data?.link
 
     if (url === undefined) return undefined
     return { ...post, type: 'embed', url }
-  } catch {
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(errorField(error))
+    }
+
     return undefined
   }
 }
@@ -87,9 +102,10 @@ const parseRedgifs: ParserFunction = async post => {
   const sources = $('source[type="video/mp4"]')
   const urls: string[] = []
 
-  sources.each((_, s) => {
-    const source = s as cheerio.TagElement
-    urls.push(source.attribs.src)
+  sources.each((_, element) => {
+    const source = element as cheerio.TagElement
+    const { src } = source.attribs
+    if (src) urls.push(src)
   })
 
   const url = urls.find(x => x.includes('-mobile') === false)
@@ -101,24 +117,28 @@ const parseRedgifs: ParserFunction = async post => {
 
 // #region Parse All
 const checkSizes: (
-  posts: Array<Post | undefined>
-) => Promise<Array<Post | undefined>> = async posts =>
+  posts: (Post | undefined)[],
+) => Promise<(Post | undefined)[]> = async posts =>
   mapAsync(posts, async post => {
     if (post === undefined) return undefined
     if (post.type === 'text') return post
 
     try {
       const resp = await axios.head(post.url)
-      const headers = resp.headers as Record<string, string | string[]>
+      const headers = resp.headers as Record<string, string[] | string>
 
-      const l = headers['content-length']
-      if (l === undefined) return post
+      const contentLength = headers['content-length']
+      if (contentLength === undefined) return post
 
-      const lengthString = Array.isArray(l) ? l[0] : l
+      const lengthString = Array.isArray(contentLength)
+        ? contentLength[0]
+        : contentLength
+
       if (lengthString === undefined) return post
       if (lengthString === '') return post
 
       const length = Number.parseInt(lengthString, 10)
+      // eslint-disable-next-line require-atomic-updates
       post.size = length
 
       // Discord Limit for Bots
@@ -138,7 +158,7 @@ const checkSizes: (
   })
 
 export const parseAll: (
-  posts: readonly PartialPost[]
+  posts: readonly PartialPost[],
 ) => Promise<readonly Post[]> = async posts => {
   const allPosts = await Promise.all([
     mapAsync(posts, async post => parseSimple(post)),

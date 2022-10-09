@@ -13,7 +13,7 @@ export const env = defineEnvironment({
 
   // #region Redis
   REDIS_HOST: t.string(),
-  REDIS_PORT: t.int().default(6379),
+  REDIS_PORT: t.int().default(6_379),
   REDIS_PASS: t.string(),
   REDIS_DB_OFFSET: t.int().default(0),
   // #endregion

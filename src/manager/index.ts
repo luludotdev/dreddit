@@ -1,27 +1,28 @@
+import { clearInterval, setInterval } from 'node:timers'
 import { field } from '@lolpants/jogger'
 import { WebhookClient } from 'discord.js'
+import { generatePosts } from './generator.js'
 import { config, type SubredditConfig } from '~/config/index.js'
 import { MIN_INTERVAL } from '~/config/schema.js'
 import { ctxField, errorField, logger } from '~/logger.js'
 import { validateSubreddit } from '~/reddit/index.js'
 import { redis } from '~/redis/index.js'
 import { resolveArray } from '~/utils/arrays.js'
-import { generatePosts } from './generator.js'
 
 const ctx = ctxField('manager')
 
 interface Manager {
-  cleanup: () => void | Promise<void>
+  cleanup(): Promise<void> | void
 }
 
 export const createManager: (
-  post: SubredditConfig
+  post: SubredditConfig,
 ) => Promise<Manager | undefined> = async postConfig => {
   const { subreddit } = postConfig
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(
     MIN_INTERVAL,
-    postConfig.interval ?? config.interval
+    postConfig.interval ?? config.interval,
   )
 
   const subredditField = field('subreddit', `/r/${subreddit}`)
@@ -31,7 +32,7 @@ export const createManager: (
     logger.warn(
       ctx,
       subredditField,
-      field('message', `/r/${subreddit} could not be reached!`)
+      field('message', `/r/${subreddit} could not be reached!`),
     )
 
     return
@@ -42,8 +43,16 @@ export const createManager: (
   const postURLs = postConfig.urls ?? false
 
   const webhooks = resolveArray(postConfig.webhooks).map(
-    hook => new WebhookClient({ url: hook })
+    hook => new WebhookClient({ url: hook }),
   )
+
+  const sendPost = async (text: string, ...files: string[]) => {
+    const tasks = webhooks.map(async hook =>
+      hook.send({ content: text, files, allowedMentions: { parse: [] } }),
+    )
+
+    return Promise.all(tasks)
+  }
 
   const generator = generatePosts(subreddit, level, redis)
   const loop = async () => {
@@ -55,7 +64,7 @@ export const createManager: (
       subredditField,
       field('action', 'pop'),
       field('id', post.id),
-      field('url', post.url)
+      field('url', post.url),
     )
 
     const markSeen = async () => {
@@ -66,7 +75,7 @@ export const createManager: (
         subredditField,
         field('action', 'mark-seen'),
         field('id', post.id),
-        field('url', post.url)
+        field('url', post.url),
       )
     }
 
@@ -91,7 +100,7 @@ export const createManager: (
         field('action', 'post'),
         field('id', post.id),
         field('url', post.url),
-        field('size', post.size ?? -1)
+        field('size', post.size ?? -1),
       )
 
       await markSeen()
@@ -101,8 +110,8 @@ export const createManager: (
         subredditField,
         field(
           'message',
-          `Failed to post ${post.id} from /r/${subreddit}/${level}`
-        )
+          `Failed to post ${post.id} from /r/${subreddit}/${level}`,
+        ),
       )
 
       if (error instanceof Error) {
@@ -122,18 +131,21 @@ export const createManager: (
   logger.info(
     ctx,
     subredditField,
-    field('message', `Posting from /r/${subreddit}/${level} every ${interval}s`)
+    field(
+      'message',
+      `Posting from /r/${subreddit}/${level} every ${interval}s`,
+    ),
   )
 
   void loop()
-  const intervalId = setInterval(async () => loop(), 1000 * interval)
+  const intervalId = setInterval(async () => loop(), 1_000 * interval)
 
   return {
     cleanup() {
       logger.info(
         ctx,
         subredditField,
-        field('message', `Stopping posts from /r/${subreddit}/${level}`)
+        field('message', `Stopping posts from /r/${subreddit}/${level}`),
       )
 
       clearInterval(intervalId)

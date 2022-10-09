@@ -1,7 +1,7 @@
+import process from 'node:process'
 import { createField, field } from '@lolpants/jogger'
 import Redis from 'ioredis'
 import cron from 'node-cron'
-import process from 'node:process'
 import { env, IS_DEV } from '~/env.js'
 import { ctxField, errorField, logger } from '~/logger.js'
 
@@ -21,13 +21,13 @@ redis.on('error', error => {
       ctx,
       event('fail'),
       field('message', 'Failed to connect to Redis Instance!'),
-      errorField(error)
+      errorField(error),
     )
   } else {
     logger.error(
       ctx,
       event('fail'),
-      field('message', 'Failed to connect to Redis Instance!')
+      field('message', 'Failed to connect to Redis Instance!'),
     )
   }
 

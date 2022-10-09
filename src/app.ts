@@ -1,8 +1,8 @@
-import { exitHook } from '@lolpants/exit'
-import { createField, field } from '@lolpants/jogger'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import process, { argv } from 'node:process'
+import { exitHook } from '@lolpants/exit'
+import { createField, field } from '@lolpants/jogger'
 import { config, configDir, jsonSchema } from '~/config/index.js'
 import { IS_DEV } from '~/env.js'
 import { ctxField, logger } from '~/logger.js'
@@ -27,11 +27,11 @@ export const init = async () => {
     ctx,
     action('init'),
     field('version', version),
-    field('environment', IS_DEV ? 'dev' : 'prod')
+    field('environment', IS_DEV ? 'dev' : 'prod'),
   )
 
   const managers = await Promise.all(
-    config.subreddits.map(async post => createManager(post))
+    config.subreddits.map(async post => createManager(post)),
   )
 
   const failures = managers.filter((x): x is undefined => x === undefined)
@@ -39,7 +39,7 @@ export const init = async () => {
     logger.error(
       ctx,
       action('init'),
-      field('message', 'All subreddits could not be reached!')
+      field('message', 'All subreddits could not be reached!'),
     )
 
     process.exit(1)

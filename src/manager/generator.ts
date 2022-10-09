@@ -5,7 +5,7 @@ import { redis } from '~/redis/index.js'
 export async function* generatePosts(
   subreddit: string,
   level: SortLevel,
-  db = redis
+  db = redis,
 ): AsyncGenerator<Post | undefined, never, never> {
   while (true) {
     const posts = await getPosts(subreddit, level)
