@@ -1,6 +1,7 @@
 import { createField, field } from '@lolpants/jogger'
 import { ctxField, logger } from '~/logger.js'
-import { getPosts, type Post, type SortLevel } from '~/reddit/index.js'
+import { getPosts } from '~/reddit/index.js'
+import type { Post, SortLevel } from '~/reddit/index.js'
 import { redis } from '~/redis/index.js'
 
 const ctx = ctxField('generate-posts')

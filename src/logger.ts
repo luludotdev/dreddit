@@ -4,8 +4,8 @@ import {
   createFileSink,
   createLogger,
   field,
-  type Field,
 } from '@lolpants/jogger'
+import type { Field } from '@lolpants/jogger'
 import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink({
