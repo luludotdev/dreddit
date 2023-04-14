@@ -162,7 +162,7 @@ const parseRedgifs: ParserFunction = async post => {
 
     return parsed
   } catch (error: unknown) {
-    if (error instanceof AxiosError && error.response?.status === 410) {
+    if (isAxiosError(error) && error.response?.status === 410) {
       return undefined
     }
 
