@@ -1,7 +1,6 @@
 import type { Buffer } from 'node:buffer'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
-import { AxiosError } from 'axios'
 import type {
   PartialPost,
   Post,
