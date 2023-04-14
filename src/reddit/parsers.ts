@@ -168,7 +168,7 @@ const checkSizes: (
       post.size = length
 
       // Discord Limit for Bots
-      if (length <= 8_388_119) return post
+      if (length <= 26_214_080) return post
 
       return { ...post, type: 'text', url: post.fallback ?? post.url }
     } catch (error: unknown) {
