@@ -1,7 +1,6 @@
 import { parse } from 'node:path'
 import { URL } from 'node:url'
 import { AxiosError } from 'axios'
-import * as cheerio from 'cheerio'
 import type { PartialPost, Post } from './types.js'
 import { errorField, logger } from '~/logger.js'
 import { mapAsync } from '~/utils/arrays.js'
