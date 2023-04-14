@@ -9,7 +9,7 @@ import { ctxField, logger } from '~/logger.js'
 const ctx = ctxField('config')
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-export const configDir = join(__dirname, '..', '..', 'config')
+export const configDir = join(__dirname, '..', 'config')
 const configPath = join(configDir, 'config.json')
 
 if (existsSync(configPath) === false) {

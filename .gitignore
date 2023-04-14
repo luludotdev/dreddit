@@ -42,7 +42,7 @@ node_modules
 .vscode
 
 # Built Files
-build/
+dist/
 
 # Config
 .env.local

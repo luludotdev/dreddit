@@ -13,7 +13,6 @@
     "strict": true,
     "useUnknownInCatchVariables": true,
     "noUncheckedIndexedAccess": true,
-    "skipLibCheck": true,
 
     // Modules
     "module": "ESNext",
@@ -23,12 +22,11 @@
     // Emit
     "declaration": false,
     "declarationMap": false,
-    "importHelpers": true,
-    "noEmitHelpers": true,
-    "importsNotUsedAsValues": "error",
+    "importHelpers": false,
     "inlineSources": true,
     "newLine": "lf",
-    "outDir": "build",
+    "noEmitHelpers": false,
+    "outDir": "dist",
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
@@ -36,14 +34,13 @@
     "forceConsistentCasingInFileNames": true,
 
     // Language and Environment
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": false,
     "lib": ["ESNext"],
     "target": "ES2021",
     "useDefineForClassFields": true,
 
     // Path Resolution
-    "plugins": [{ "transform": "typescript-transform-paths" }],
     "paths": {
       "~/*": ["./src/*"]
     }
