@@ -1,5 +1,6 @@
 import { parse } from 'node:path'
 import { URL } from 'node:url'
+import { AxiosError } from 'axios'
 import * as cheerio from 'cheerio'
 import type { PartialPost, Post } from './types.js'
 import { errorField, logger } from '~/logger.js'
@@ -94,24 +95,49 @@ const parseGfycat: ParserFunction = async post => {
 
 const parseRedgifs: ParserFunction = async post => {
   const matches = REDGIFS_RX.exec(post.url)
-  if (matches === null) return undefined
+  const id = matches?.groups?.id
+  if (!id) return undefined
 
-  const resp = await axios.get(post.url)
-  const $ = cheerio.load(resp.data)
+  try {
+    interface RedgifsAuth {
+      addr: string
+      agent: string
+      rtfm: string
+      token: string
+    }
 
-  const sources = $('source[type="video/mp4"]')
-  const urls: string[] = []
+    const { data: auth } = await axios.get<RedgifsAuth>(
+      'https://api.redgifs.com/v2/auth/temporary',
+    )
 
-  sources.each((_, element) => {
-    const source = element as cheerio.TagElement
-    const { src } = source.attribs
-    if (src) urls.push(src)
-  })
+    interface RedgifsResp {
+      gif: {
+        urls: {
+          hd: string
+          poster: string
+          sd: string
+          thumbnail: string
+          vthumbnail: string
+        }
+      }
+    }
 
-  const url = urls.find(x => x.includes('-mobile') === false)
-  if (url === undefined) return undefined
+    const { data } = await axios.get<RedgifsResp>(
+      `https://api.redgifs.com/v2/gifs/${id}`,
+      {
+        headers: { Authorization: `Bearer ${auth.token}` },
+      },
+    )
 
-  return { ...post, type: 'text', url }
+    const url = data.gif.urls.hd
+    return { ...post, type: 'embed', url, fallback: post.url }
+  } catch (error: unknown) {
+    if (error instanceof AxiosError && error.response?.status === 410) {
+      return undefined
+    }
+
+    throw error
+  }
 }
 // #endregion
 
@@ -144,7 +170,7 @@ const checkSizes: (
       // Discord Limit for Bots
       if (length <= 8_388_119) return post
 
-      return { ...post, type: 'text' }
+      return { ...post, type: 'text', url: post.fallback ?? post.url }
     } catch (error: unknown) {
       if (isAxiosError(error)) {
         const resp = error.response
