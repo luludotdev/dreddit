@@ -11,7 +11,7 @@ const action = createField('action')
 const boot = async () => {
   env.validate()
 
-  const { init } = await import('./app.js')
+  const { init } = await import('~/app.js')
   await init()
 }
 
