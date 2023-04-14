@@ -31,7 +31,7 @@ export async function* generatePosts(
           field('subreddit', subreddit),
           action('skip-staged'),
           field('id', post.id),
-          field('url', post.url),
+          field('url', post.sourceURL),
         )
 
         seenCount += 1

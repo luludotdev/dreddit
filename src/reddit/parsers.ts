@@ -1,7 +1,14 @@
+import type { Buffer } from 'node:buffer'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
 import { AxiosError } from 'axios'
-import type { PartialPost, Post } from './types.js'
+import type {
+  PartialPost,
+  Post,
+  TextPost,
+  UploadBytesPost,
+  UploadUrlPost,
+} from './types.js'
 import { errorField, logger } from '~/logger.js'
 import { mapAsync } from '~/utils/arrays.js'
 import {
@@ -30,7 +37,7 @@ const VALID_EXTS = new Set([
 
 export const parseSimple: ParserFunction = async post => {
   try {
-    const { pathname, protocol, host } = new URL(post.url)
+    const { pathname, protocol, host } = new URL(post.sourceURL)
     if (pathname === null) return undefined
     if (protocol === null) return undefined
     if (host === null) return undefined
@@ -40,11 +47,13 @@ export const parseSimple: ParserFunction = async post => {
     if (isValid === false) return undefined
 
     const gifvFixedPathname = pathname.replace('.gifv', '.mp4')
-    return {
+    const mapped: UploadUrlPost = {
       ...post,
-      type: 'embed',
+      type: 'upload-url',
       url: `${protocol}//${host}${gifvFixedPathname}`,
     }
+
+    return mapped
   } catch (error) {
     if (error instanceof Error) {
       logger.error(errorField(error))
@@ -55,7 +64,7 @@ export const parseSimple: ParserFunction = async post => {
 }
 
 const parseImgurs: ParserFunction = async post => {
-  const matches = IMGUR_RX.exec(post.url)
+  const matches = IMGUR_RX.exec(post.sourceURL)
 
   const { id } = matches?.groups ?? {}
   if (!id) return undefined
@@ -75,7 +84,13 @@ const parseImgurs: ParserFunction = async post => {
     const url = resp.data?.data?.mp4 ?? resp.data?.data?.link
 
     if (url === undefined) return undefined
-    return { ...post, type: 'embed', url }
+    const mapped: UploadUrlPost = {
+      ...post,
+      type: 'upload-url',
+      url,
+    }
+
+    return mapped
   } catch (error) {
     if (error instanceof Error) {
       logger.error(errorField(error))
@@ -86,14 +101,14 @@ const parseImgurs: ParserFunction = async post => {
 }
 
 const parseGfycat: ParserFunction = async post => {
-  const matches = GFY_RX.exec(post.url)
+  const matches = GFY_RX.exec(post.sourceURL)
   if (matches === null) return undefined
 
-  return { ...post, type: 'text' }
+  return { ...post, type: 'text', text: post.sourceURL }
 }
 
 const parseRedgifs: ParserFunction = async post => {
-  const matches = REDGIFS_RX.exec(post.url)
+  const matches = REDGIFS_RX.exec(post.sourceURL)
   const id = matches?.groups?.id
   if (!id) return undefined
 
@@ -129,7 +144,23 @@ const parseRedgifs: ParserFunction = async post => {
     )
 
     const url = data.gif.urls.hd
-    return { ...post, type: 'embed', url, fallback: post.url }
+    const { data: bytes } = await axios.get<Buffer>(url, {
+      responseType: 'arraybuffer',
+      headers: { Authorization: `Bearer ${auth.token}` },
+    })
+
+    const { pathname } = new URL(url)
+    const { base } = parse(pathname)
+
+    const parsed: UploadBytesPost = {
+      ...post,
+      type: 'upload-bytes',
+      bytes,
+      name: base,
+      fallback: post.sourceURL,
+    }
+
+    return parsed
   } catch (error: unknown) {
     if (error instanceof AxiosError && error.response?.status === 410) {
       return undefined
@@ -148,38 +179,53 @@ const checkSizes: (
     if (post === undefined) return undefined
     if (post.type === 'text') return post
 
-    try {
-      const resp = await axios.head(post.url)
-      const headers = resp.headers as Record<string, string[] | string>
+    const resolveSize = async (): Promise<number | undefined> => {
+      if (post.type === 'upload-bytes') return post.bytes.length
 
-      const contentLength = headers['content-length']
-      if (contentLength === undefined) return post
+      try {
+        const resp = await axios.head(post.url)
+        const headers = resp.headers as Record<string, string[] | string>
 
-      const lengthString = Array.isArray(contentLength)
-        ? contentLength[0]
-        : contentLength
+        const contentLength = headers['content-length']
+        if (contentLength === undefined) return undefined
 
-      if (lengthString === undefined) return post
-      if (lengthString === '') return post
+        const lengthString = Array.isArray(contentLength)
+          ? contentLength[0]
+          : contentLength
 
-      const length = Number.parseInt(lengthString, 10)
-      // eslint-disable-next-line require-atomic-updates
-      post.size = length
+        if (lengthString === undefined) return undefined
+        if (lengthString === '') return undefined
 
-      // Discord Limit for Bots
-      if (length <= 26_214_080) return post
+        return Number.parseInt(lengthString, 10)
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          const resp = error.response
+          if (resp?.status === 429) return undefined
+        }
 
-      return { ...post, type: 'text', url: post.fallback ?? post.url }
-    } catch (error: unknown) {
-      if (isAxiosError(error)) {
-        const resp = error.response
-        if (resp?.status === 429) return post
-
-        return
+        throw error as Error
       }
-
-      throw error as Error
     }
+
+    const size = await resolveSize()
+    if (!size) return post
+
+    // eslint-disable-next-line require-atomic-updates
+    post.size = size
+
+    // Discord Limit for Bots
+    const MAX_LENGTH = 26_214_080
+    if (size <= MAX_LENGTH) return post
+
+    const fallback = post.fallback
+    const source = post.type === 'upload-url' ? post.url : undefined
+    const mapped: TextPost = {
+      ...post,
+      type: 'text',
+      text: fallback ?? source ?? post.source,
+    }
+
+    return mapped
   })
 
 export const parseAll: (

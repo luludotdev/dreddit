@@ -1,6 +1,7 @@
 import { clearInterval, setInterval } from 'node:timers'
 import { createField, field } from '@lolpants/jogger'
-import { WebhookClient } from 'discord.js'
+import { AttachmentBuilder, WebhookClient } from 'discord.js'
+import type { BufferResolvable } from 'discord.js'
 import ms from 'ms'
 import { generatePosts } from './generator.js'
 import { config } from '~/config/index.js'
@@ -49,7 +50,10 @@ export const createManager: (
     hook => new WebhookClient({ url: hook }),
   )
 
-  const sendPost = async (text: string, ...files: string[]) => {
+  const sendPost = async (
+    text: string,
+    ...files: (AttachmentBuilder | BufferResolvable)[]
+  ) => {
     const tasks = webhooks.map(async hook =>
       hook.send({ content: text, files, allowedMentions: { parse: [] } }),
     )
@@ -67,7 +71,7 @@ export const createManager: (
       subredditField,
       action('pop'),
       field('id', post.id),
-      field('url', post.url),
+      field('url', post.sourceURL),
     )
 
     const unstage = async () => {
@@ -78,7 +82,7 @@ export const createManager: (
         subredditField,
         action('unstage'),
         field('id', post.id),
-        field('url', post.url),
+        field('url', post.sourceURL),
       )
     }
 
@@ -89,7 +93,7 @@ export const createManager: (
         subredditField,
         action('mark-seen'),
         field('id', post.id),
-        field('url', post.url),
+        field('url', post.sourceURL),
       )
 
       await unstage()
@@ -99,23 +103,38 @@ export const createManager: (
 
     try {
       const lines: string[] = []
-      const files: string[] = []
+      const files: (AttachmentBuilder | BufferResolvable)[] = []
 
       if (postTitles === true) lines.push(post.title)
       if (postURLs === true) lines.push(`<${post.source}>`)
 
-      if (post.type === 'text') lines.push(post.url)
-      else files.push(post.url)
+      switch (post.type) {
+        case 'text': {
+          lines.push(post.text)
+          break
+        }
+
+        case 'upload-url': {
+          files.push(post.url)
+          break
+        }
+
+        case 'upload-bytes': {
+          const file = new AttachmentBuilder(post.bytes, { name: post.name })
+          files.push(file)
+          break
+        }
+      }
 
       const message = lines.join('\n')
-
       await sendPost(message, ...files)
+
       logger.info(
         ctx,
         subredditField,
         action('post'),
         field('id', post.id),
-        field('url', post.url),
+        field('url', post.sourceURL),
         field('size', post.size ?? -1),
       )
 

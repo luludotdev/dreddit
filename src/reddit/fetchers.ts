@@ -34,13 +34,17 @@ export const fetchPosts: (
 
   const posts: PartialPost[] = resp.data.data.children
     .map(({ data }) => data)
-    .map(({ id, title, url, over_18, permalink }) => ({
-      id,
-      nsfw: over_18,
-      source: `https://reddit.com${permalink}`,
-      title,
-      url,
-    }))
+    .map(({ id, title, url, over_18, permalink }) => {
+      const post: PartialPost = {
+        id,
+        nsfw: over_18,
+        source: `https://reddit.com${permalink}`,
+        sourceURL: url,
+        title,
+      }
+
+      return post
+    })
 
   logger.trace(
     ctx,

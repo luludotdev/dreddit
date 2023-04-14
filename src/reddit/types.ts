@@ -1,23 +1,42 @@
-import type { Except } from 'type-fest'
+import type { Buffer } from 'node:buffer'
 import type { SubredditConfig } from '~/config/index.js'
 
 export type SortLevel = Exclude<SubredditConfig['level'], undefined>
-export type PostType = 'embed' | 'text'
 
-export interface Post {
+export interface PartialPost {
   id: string
   title: string
-  source: string
-
-  type: PostType
-  url: string
   nsfw: boolean
 
+  source: string
+  sourceURL: string
+}
+
+interface PostCommon extends PartialPost {
   size?: number
+}
+
+export interface TextPost extends PostCommon {
+  type: 'text'
+  text: string
+}
+
+export interface UploadUrlPost extends PostCommon {
+  type: 'upload-url'
+
+  url: string
   fallback?: string
 }
 
-export type PartialPost = Except<Post, 'type'>
+export interface UploadBytesPost extends PostCommon {
+  type: 'upload-bytes'
+
+  bytes: Buffer
+  name: string
+  fallback?: string
+}
+
+export type Post = TextPost | UploadBytesPost | UploadUrlPost
 
 export interface Response {
   kind: 'Listing'
