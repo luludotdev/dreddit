@@ -201,6 +201,7 @@ const checkSizes: (
         if (isAxiosError(error)) {
           const resp = error.response
           if (resp?.status === 429) return undefined
+          return undefined
         }
 
         throw error as Error
