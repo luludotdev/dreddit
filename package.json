@@ -14,7 +14,7 @@
     "lint": "prettier --check . && eslint src --ext ts",
     "format": "prettier --write . && eslint src --ext ts --fix",
     "fmt": "npm run format",
-    "check": "npm run tsc --noEmit --skipLibCheck",
+    "check": "npx tsc --noEmit --skipLibCheck",
     "test": "npm run check && npm run lint",
     "build": "tsup",
     "dev": "npm run build --watch",
