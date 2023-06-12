@@ -1,5 +1,4 @@
 import { clearInterval, setInterval } from 'node:timers'
-import { createField, field } from '@lolpants/jogger'
 import { AttachmentBuilder, WebhookClient } from 'discord.js'
 import type { BufferResolvable } from 'discord.js'
 import ms from 'ms'
@@ -7,13 +6,12 @@ import { generatePosts } from './generator.js'
 import { config } from '~/config/index.js'
 import type { SubredditConfig } from '~/config/index.js'
 import { MIN_INTERVAL } from '~/config/schema.js'
-import { ctxField, errorField, logger } from '~/logger.js'
+import { action, context, errorField, logger, message } from '~/logger.js'
 import { validateSubreddit } from '~/reddit/index.js'
 import { redis } from '~/redis/index.js'
 import { resolveArray } from '~/utils/arrays.js'
 
-const ctx = ctxField('manager')
-const action = createField('action')
+const ctx = context('manager')
 
 interface Manager {
   cleanup(): Promise<void> | void
@@ -23,21 +21,21 @@ export const createManager: (
   post: SubredditConfig,
 ) => Promise<Manager | undefined> = async postConfig => {
   const { subreddit } = postConfig
+  const rSubreddit = `/r/${subreddit}`
+
   const level = postConfig.level ?? 'hot'
   const interval = Math.max(
     MIN_INTERVAL,
     postConfig.interval ?? config.interval,
   )
 
-  const subredditField = field('subreddit', `/r/${subreddit}`)
-
   const isValid = await validateSubreddit(subreddit)
   if (isValid === false) {
-    logger.warn(
-      ctx,
-      subredditField,
-      field('message', `/r/${subreddit} could not be reached!`),
-    )
+    logger.warn({
+      ...ctx,
+      subreddit: rSubreddit,
+      ...message(`/r/${subreddit} could not be reached`),
+    })
 
     return
   }
@@ -66,35 +64,35 @@ export const createManager: (
     const { value: post } = await generator.next()
     if (post === undefined) return
 
-    logger.trace(
-      ctx,
-      subredditField,
-      action('pop'),
-      field('id', post.id),
-      field('url', post.sourceURL),
-    )
+    logger.trace({
+      ...ctx,
+      subreddit: rSubreddit,
+      ...action('pop'),
+      id: post.id,
+      url: post.sourceURL,
+    })
 
     const unstage = async () => {
       await redis.srem(`staging:${subreddit}`, post.id)
 
-      logger.trace(
-        ctx,
-        subredditField,
-        action('unstage'),
-        field('id', post.id),
-        field('url', post.sourceURL),
-      )
+      logger.trace({
+        ...ctx,
+        subreddit: rSubreddit,
+        ...action('unstage'),
+        id: post.id,
+        url: post.sourceURL,
+      })
     }
 
     const markSeen = async () => {
       await redis.sadd(subreddit, post.id)
-      logger.trace(
-        ctx,
-        subredditField,
-        action('mark-seen'),
-        field('id', post.id),
-        field('url', post.sourceURL),
-      )
+      logger.trace({
+        ...ctx,
+        subreddit: rSubreddit,
+        ...action('mark-seen'),
+        id: post.id,
+        url: post.sourceURL,
+      })
 
       await unstage()
     }
@@ -129,28 +127,25 @@ export const createManager: (
       const message = lines.join('\n')
       await sendPost(message, ...files)
 
-      logger.info(
-        ctx,
-        subredditField,
-        action('post'),
-        field('id', post.id),
-        field('url', post.sourceURL),
-        field('size', post.size ?? -1),
-      )
+      logger.info({
+        ...ctx,
+        subreddit: rSubreddit,
+        ...action('post'),
+        id: post.id,
+        url: post.sourceURL,
+        size: post.size ?? -1,
+      })
 
       await markSeen()
     } catch (error: unknown) {
-      logger.warn(
-        ctx,
-        subredditField,
-        field(
-          'message',
-          `Failed to post ${post.id} from /r/${subreddit}/${level}`,
-        ),
-      )
+      logger.warn({
+        ...ctx,
+        subreddit: rSubreddit,
+        ...message(`failed to post ${post.id} from /r/${subreddit}/${level}`),
+      })
 
       if (error instanceof Error) {
-        logger.warn(ctx, subredditField, errorField(error))
+        logger.warn({ ...ctx, subreddit: rSubreddit, ...errorField(error) })
       }
 
       await unstage()
@@ -159,31 +154,28 @@ export const createManager: (
 
   const clearStaged = async () => {
     await redis.del(`staging:${subreddit}`)
-    logger.trace(ctx, subredditField, field('action', 'clear-staged'))
+    logger.trace({ ...ctx, subreddit: rSubreddit, ...action('clear-staged') })
   }
 
   await clearStaged()
   const clearStagedInterval = setInterval(async () => clearStaged(), ms('1h'))
 
-  logger.info(
-    ctx,
-    subredditField,
-    field(
-      'message',
-      `Posting from /r/${subreddit}/${level} every ${interval}s`,
-    ),
-  )
+  logger.info({
+    ...ctx,
+    subreddit: rSubreddit,
+    ...message(`posting from /r/${subreddit}/${level} every ${interval}s`),
+  })
 
   void loop()
   const loopInterval = setInterval(async () => loop(), 1_000 * interval)
 
   return {
     cleanup() {
-      logger.info(
-        ctx,
-        subredditField,
-        field('message', `Stopping posts from /r/${subreddit}/${level}`),
-      )
+      logger.info({
+        ...ctx,
+        subreddit: rSubreddit,
+        ...message(`stopping posts from /r/${subreddit}/${level}`),
+      })
 
       clearInterval(clearStagedInterval)
       clearInterval(loopInterval)

@@ -1,11 +1,10 @@
-import { createField, field } from '@lolpants/jogger'
+import type { Data } from '@lolpants/jogger'
 import type { PartialPost, Response, SortLevel } from './types.js'
-import { ctxField, logger } from '~/logger.js'
+import { action, context, logger } from '~/logger.js'
 import { redditAxios as axios } from '~/utils/axios.js'
 
-const ctx = ctxField('reddit')
-const action = createField('action')
-const status = createField('status')
+const ctx = context('reddit')
+const status = (status: string): Data => ({ status })
 
 export const validateSubreddit = async (subreddit: string) => {
   try {
@@ -20,13 +19,13 @@ export const fetchPosts: (
   subreddit: string,
   level?: SortLevel,
 ) => Promise<readonly PartialPost[]> = async (subreddit, level = 'hot') => {
-  logger.trace(
-    ctx,
-    action('fetch'),
-    status('preflight'),
-    field('subreddit', `/r/${subreddit}`),
-    field('sort', level),
-  )
+  logger.trace({
+    ...ctx,
+    ...action('fetch'),
+    ...status('preflight'),
+    subreddit: `/r/${subreddit}`,
+    sort: level,
+  })
 
   const resp = await axios.get<Response>(
     `/r/${subreddit}/${level}.json?limit=100`,
@@ -46,14 +45,14 @@ export const fetchPosts: (
       return post
     })
 
-  logger.trace(
-    ctx,
-    action('fetch'),
-    status('complete'),
-    field('subreddit', `/r/${subreddit}`),
-    field('sort', level),
-    field('results', posts.length),
-  )
+  logger.trace({
+    ...ctx,
+    ...action('fetch'),
+    ...status('complete'),
+    subreddit: `/r/${subreddit}`,
+    sort: level,
+    results: posts.length,
+  })
 
   return posts
 }

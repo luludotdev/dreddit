@@ -1,12 +1,12 @@
 import process from 'node:process'
-import { createField, field } from '@lolpants/jogger'
+import type { Data } from '@lolpants/jogger'
 import Redis from 'ioredis'
 import cron from 'node-cron'
 import { env, IS_DEV } from '~/env.js'
-import { ctxField, errorField, logger } from '~/logger.js'
+import { context, errorField, logger, message } from '~/logger.js'
 
-const ctx = ctxField('redis')
-const event = createField('event')
+const ctx = context('redis')
+const event = (event: string): Data => ({ event })
 
 export const redis = new Redis({
   db: env.REDIS_DB_OFFSET + 0,
@@ -17,25 +17,25 @@ export const redis = new Redis({
 
 redis.on('error', error => {
   if (error instanceof Error) {
-    logger.error(
-      ctx,
-      event('fail'),
-      field('message', 'Failed to connect to Redis Instance!'),
-      errorField(error),
-    )
+    logger.error({
+      ...ctx,
+      ...event('fail'),
+      ...message('failed to connect to redis instance'),
+      ...errorField(error),
+    })
   } else {
-    logger.error(
-      ctx,
-      event('fail'),
-      field('message', 'Failed to connect to Redis Instance!'),
-    )
+    logger.error({
+      ...ctx,
+      ...event('fail'),
+      ...message('failed to connect to redis instance'),
+    })
   }
 
   process.exit(1)
 })
 
 redis.on('ready', () => {
-  logger.info(ctx, event('ready'))
+  logger.info({ ...ctx, ...event('ready') })
 })
 
 redis.on('ready', () => {

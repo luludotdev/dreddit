@@ -1,11 +1,9 @@
 import {
   createConsoleSink,
-  createField,
   createFileSink,
   createLogger,
-  field,
 } from '@lolpants/jogger'
-import type { Field } from '@lolpants/jogger'
+import type { Data, Primitive } from '@lolpants/jogger'
 import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink({
@@ -26,15 +24,17 @@ export const logger = createLogger({
   sink: [consoleSink, fileSink],
 })
 
-export const ctxField = createField('context')
-export const errorField: <T extends Error>(error: T) => Field = error => {
-  const fields: [Field, ...Field[]] = [
-    field('type', error.name),
-    field('message', error.message),
-  ]
+export const context = (context: string): Data => ({ context })
+export const action = (action: string): Data => ({ action })
+export const message = (message: string): Data => ({ message })
 
-  if (error.stack) fields.push(field('stack', error.stack))
-  return field('error', ...fields)
+export const errorField = <T extends Error>(error: T): Data => {
+  const fields: Primitive = { type: error.name, message: error.message }
+  const all: Primitive = error.stack
+    ? { ...fields, stack: error.stack }
+    : fields
+
+  return { error: all }
 }
 
 export const flush = async () => fileSink.flush()
