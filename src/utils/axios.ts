@@ -1,4 +1,3 @@
-import type { AxiosError } from 'axios'
 import Axios from 'axios'
 import { readPackageUpSync as readPkg } from 'read-pkg-up'
 import { env } from '~/env.js'
@@ -22,12 +21,3 @@ export const imgurAxios = Axios.create({
     Authorization: `Client-ID ${env.IMGUR_CLID}`,
   },
 })
-
-// @ts-expect-error Type Assert Function
-export const isAxiosError: (error: unknown) => error is AxiosError = error => {
-  if (typeof error !== 'object') return false
-  if (error === null) return false
-
-  // @ts-expect-error Untyped Property
-  return error.isAxiosError === true
-}

@@ -1,6 +1,7 @@
 import type { Buffer } from 'node:buffer'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
+import { isAxiosError } from 'axios'
 import { errorField, logger } from '~/logger.js'
 import type {
   PartialPost,
@@ -10,11 +11,7 @@ import type {
   UploadUrlPost,
 } from '~/reddit/types.js'
 import { mapAsync } from '~/utils/arrays.js'
-import {
-  redditAxios as axios,
-  imgurAxios,
-  isAxiosError,
-} from '~/utils/axios.js'
+import { redditAxios as axios, imgurAxios } from '~/utils/axios.js'
 
 // #region Parsers
 type ParserFunction = (
