@@ -1,4 +1,4 @@
-# 🔥 Dreddit ![Docker Build](https://github.com/luludotdev/dreddit/workflows/Docker%20Build/badge.svg)
+# 🔥 Dreddit [![Build and Test](https://github.com/luludotdev/dreddit/actions/workflows/ci.yml/badge.svg)](https://github.com/luludotdev/dreddit/actions/workflows/ci.yml)
 
 > Periodically posts reddit images to a Discord webhook
 
