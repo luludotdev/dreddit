@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import process, { argv } from 'node:process'
-import { exitHook } from '@lolpants/exit'
+import { exitHook } from '@luludev/exit'
 import { config, configDir, jsonSchema } from '~/config/index.js'
 import { IS_DEV } from '~/env.js'
 import { action, context, logger, message } from '~/logger.js'

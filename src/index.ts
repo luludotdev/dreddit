@@ -1,6 +1,6 @@
 import 'source-map-support/register.js'
 
-import { exitHook } from '@lolpants/exit'
+import { exitHook } from '@luludev/exit'
 import { env } from '~/env.js'
 import { action, context, errorField, flush, logger } from '~/logger.js'
 

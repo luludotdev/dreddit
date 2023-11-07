@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { Data } from '@lolpants/jogger'
+import type { Data } from '@luludev/jogger'
 import Redis from 'ioredis'
 import cron from 'node-cron'
 import { env, IS_DEV } from '~/env.js'

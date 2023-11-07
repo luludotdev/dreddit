@@ -1,4 +1,4 @@
-import type { Data } from '@lolpants/jogger'
+import type { Data } from '@luludev/jogger'
 import type { PartialPost, Response, SortLevel } from './types.js'
 import { action, context, logger } from '~/logger.js'
 import { redditAxios as axios } from '~/utils/axios.js'
