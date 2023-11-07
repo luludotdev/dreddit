@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path, { join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { ConfigSchema } from './schema.js'
+import { ConfigSchema } from '~/config/schema.js'
 import { context, logger, message } from '~/logger.js'
 
 const ctx = context('config')

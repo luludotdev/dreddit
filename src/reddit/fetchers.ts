@@ -1,6 +1,6 @@
 import type { Data } from '@luludev/jogger'
-import type { PartialPost, Response, SortLevel } from './types.js'
 import { action, context, logger } from '~/logger.js'
+import type { PartialPost, Response, SortLevel } from '~/reddit/types.js'
 import { redditAxios as axios } from '~/utils/axios.js'
 
 const ctx = context('reddit')

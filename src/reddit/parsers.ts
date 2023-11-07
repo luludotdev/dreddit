@@ -1,14 +1,14 @@
 import type { Buffer } from 'node:buffer'
 import { parse } from 'node:path'
 import { URL } from 'node:url'
+import { errorField, logger } from '~/logger.js'
 import type {
   PartialPost,
   Post,
   TextPost,
   UploadBytesPost,
   UploadUrlPost,
-} from './types.js'
-import { errorField, logger } from '~/logger.js'
+} from '~/reddit/types.js'
 import { mapAsync } from '~/utils/arrays.js'
 import {
   redditAxios as axios,
