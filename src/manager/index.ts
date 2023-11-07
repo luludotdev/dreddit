@@ -29,12 +29,13 @@ export const createManager: (
     postConfig.interval ?? config.interval,
   )
 
-  const isValid = await validateSubreddit(subreddit)
-  if (isValid === false) {
+  const error = await validateSubreddit(subreddit)
+  if (error !== undefined) {
     logger.warn({
       ...ctx,
       subreddit: rSubreddit,
       ...message(`/r/${subreddit} could not be reached`),
+      ...errorField(error),
     })
 
     return

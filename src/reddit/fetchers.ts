@@ -6,12 +6,15 @@ import { redditAxios as axios } from '~/utils/axios.js'
 const ctx = context('reddit')
 const status = (status: string): Data => ({ status })
 
-export const validateSubreddit = async (subreddit: string) => {
+export const validateSubreddit = async (
+  subreddit: string,
+): Promise<Error | undefined> => {
   try {
-    const resp = await axios.get<Response>(`/r/${subreddit}.json?limit=1`)
-    return resp.status === 200
-  } catch {
-    return false
+    await axios.get<Response>(`/r/${subreddit}.json?limit=1`)
+    return undefined
+  } catch (error) {
+    if (error instanceof Error) return error
+    throw error
   }
 }
 
