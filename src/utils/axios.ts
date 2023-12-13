@@ -1,5 +1,5 @@
 import Axios from 'axios'
-// import { readPackageUpSync as readPkg } from 'read-pkg-up'
+// import { readPackageUpSync as readPkg } from 'read-package-up'
 import { env } from '~/env.js'
 
 // const pkg = readPkg()
